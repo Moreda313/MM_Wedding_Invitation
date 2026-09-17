@@ -1,0 +1,82 @@
+import { useEffect, useState } from "react";
+import { wedding } from "../data/wedding";
+import { useScrollProgress } from "../hooks/useScroll";
+import { assetUrl } from "../lib/assetUrl";
+
+export function WorldTransition() {
+  const { ref, progress } = useScrollProgress();
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "700px" },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [ref]);
+  const pixel = progress < 0.27 ? 96 : progress < 0.48 ? 48 : 24;
+  return (
+    <section
+      className="world-transition"
+      ref={ref}
+      data-music="transition"
+      aria-label={wedding.transition.before}
+    >
+      <div
+        className="transition-sticky"
+        style={{ "--transition-progress": progress } as React.CSSProperties}
+      >
+        <div className="transition-wash" style={{ opacity: progress }} />
+        <div className="transition-copy">
+          <p className="eyebrow">{wedding.transition.before}</p>
+          <h2>
+            {wedding.transition.title.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </h2>
+        </div>
+        <div className="portal">
+          <img
+            src={assetUrl("/assets/photos/couple-640.webp")}
+            alt=""
+            className="portal-real"
+            loading="lazy"
+            style={{ opacity: 1 - Math.min(progress * 3, 1) }}
+          />
+          {near && (
+            <>
+              <img
+                src={assetUrl(`/assets/photos/pixel-${pixel}.webp`)}
+                alt=""
+                className="portal-pixels"
+                style={{
+                  opacity:
+                    Math.min(progress * 4, 1) *
+                    (1 - Math.max(0, (progress - 0.6) * 3)),
+                }}
+              />
+              <img
+                src={assetUrl(wedding.pixel.hero)}
+                alt=""
+                className="portal-new"
+                style={{ opacity: Math.max(0, (progress - 0.5) * 2) }}
+              />
+            </>
+          )}
+          <div
+            className="portal-grid"
+            style={{ opacity: Math.sin(progress * Math.PI) * 0.2 }}
+          />
+        </div>
+        <p className="transition-caption">
+          {progress > 0.75 ? wedding.transition.after : wedding.transition.hint}
+        </p>
+      </div>
+    </section>
+  );
+}

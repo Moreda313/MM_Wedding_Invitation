@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+test-results/
+*.log
+*.tsbuildinfo
+
+# Keep original personal media locally; publish optimized assets from public/.
+/*.mp3
+/*.zip
+/星露谷.png
+/.env
+/.env.*
