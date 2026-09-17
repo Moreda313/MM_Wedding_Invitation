@@ -216,10 +216,12 @@ try {
     Math.abs(document.querySelector("#day2-info").getBoundingClientRect().top - 80) < 3,
   );
   await direct.evaluate(() => {
-    document.documentElement.style.scrollBehavior = "auto";
-    scrollTo(0, 0);
+    scrollTo({ top: 0, behavior: "instant" });
   });
-  await direct.waitForTimeout(750);
+  await direct.waitForFunction(() =>
+    [...document.querySelectorAll(".chrome-piece")].every((element) =>
+      element.inert && getComputedStyle(element).opacity === "0"),
+  );
   assert.equal(await direct.locator(".invitation").getAttribute("data-opening-stage"), "opening");
   for (const selector of [".brand", ".music-shell", ".day-nav"]) {
     assert.equal(await direct.locator(selector).evaluate((element) =>
