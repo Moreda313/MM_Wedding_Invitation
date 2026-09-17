@@ -170,7 +170,9 @@ try {
       () => (document.documentElement.style.scrollBehavior = "auto"),
     );
     if (width === 390) {
-      await page.evaluate(() => scrollTo(0, 0));
+      await page.locator("#day1").evaluate((element) =>
+        scrollTo(0, element.getBoundingClientRect().top + scrollY),
+      );
       await page.waitForTimeout(300);
       await page.locator(".music-control").click();
       await page.waitForFunction(

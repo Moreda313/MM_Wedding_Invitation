@@ -73,6 +73,46 @@ export function useMusicScene() {
   return scene;
 }
 
+// Follow the story, including direct hash entry, scrolling back and reduced motion.
+export function useOpeningStage(frameCount: number) {
+  const reduced = useReducedMotion();
+  const [stage, setStage] = useState("opening");
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const greeting = document.querySelector("#hello");
+        const hero = document.querySelector("#day1");
+        if (!greeting || !hero) return;
+        const rect = greeting.getBoundingClientRect();
+        const progress = Math.max(
+          0, -rect.top / Math.max(1, rect.height - innerHeight),
+        );
+        const lastFrame = greeting.querySelector(".greeting-frame:last-of-type");
+        const announced = reduced
+          ? !!lastFrame &&
+            lastFrame.getBoundingClientRect().top <= innerHeight * 0.55
+          : Math.round(progress * (frameCount - 1)) >= frameCount - 1;
+        setStage(
+          hero.getBoundingClientRect().top < innerHeight * 0.9
+            ? "invitation"
+            : announced ? "announcement" : "opening",
+        );
+      });
+    };
+    update();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener("scroll", update);
+      removeEventListener("resize", update);
+    };
+  }, [frameCount, reduced]);
+  return stage;
+}
+
 export function useReveal() {
   useEffect(() => {
     const observer = new IntersectionObserver(

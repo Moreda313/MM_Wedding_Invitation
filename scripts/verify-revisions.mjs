@@ -29,6 +29,24 @@ try {
     await page.evaluate(
       () => (document.documentElement.style.scrollBehavior = "auto"),
     );
+    assert.equal(await page.locator(".invitation").getAttribute("data-opening-stage"), "opening");
+    for (const selector of [".brand", ".music-shell", ".day-nav"]) {
+      assert.equal(await page.locator(selector).evaluate((element) => element.inert), true);
+      assert.equal(await page.locator(selector).evaluate((element) => getComputedStyle(element).opacity), "0");
+    }
+    const font = await page.locator(".first-greeting h1").evaluate((element) => ({
+      size: parseFloat(getComputedStyle(element).fontSize),
+      family: getComputedStyle(element).fontFamily,
+    }));
+    assert.ok(font.size >= 56 && font.size <= 64);
+    assert.ok(!/Songti|Georgia|SimSun/.test(font.family), "Opening must use modern sans-serif");
+    // The incoming sentence stays pale long enough to notice, then always settles.
+    await page.locator(".greeting").evaluate((element) =>
+      scrollTo(0, (element.offsetHeight - innerHeight) * 0.25),
+    );
+    await page.waitForTimeout(450);
+    const midway = await page.locator(".greeting-frame.is-current").evaluate((element) => +getComputedStyle(element).opacity);
+    assert.ok(midway > 0.03 && midway < 0.65, `Expected a slow fade, got ${midway}`);
     // Stop between the old exact positions, at boundaries, and when scrolling back.
     for (const fraction of [
       0.07, 0.124, 0.126, 0.23, 0.374, 0.376, 0.49, 0.51, 0.624, 0.626, 0.87,
@@ -41,7 +59,7 @@ try {
             scrollTo(0, (element.offsetHeight - innerHeight) * fraction),
           fraction,
         );
-      await page.waitForTimeout(450);
+      await page.waitForTimeout(1450);
       const frames = await page
         .locator(".greeting-frame")
         .evaluateAll((elements) =>
@@ -68,6 +86,30 @@ try {
     await page.screenshot({
       path: `test-results/${engine}-${width}-clear-greeting.png`,
     });
+    await page.locator(".greeting").evaluate((element) =>
+      scrollTo(0, (element.offsetHeight - innerHeight) * 0.92),
+    );
+    await page.waitForTimeout(1450);
+    assert.equal(await page.locator(".invitation").getAttribute("data-opening-stage"), "announcement");
+    assert.equal(await page.locator(".music-shell").evaluate((element) => element.inert), false);
+    assert.equal(await page.locator(".brand").evaluate((element) => element.inert), true);
+    assert.equal(await page.locator(".day-nav").evaluate((element) => element.inert), true);
+    await page.screenshot({ path: `test-results/${engine}-${width}-announcement.png` });
+    await page.locator("#day1").evaluate((element) =>
+      scrollTo(0, element.getBoundingClientRect().top + scrollY),
+    );
+    await page.waitForTimeout(750);
+    assert.equal(await page.locator(".invitation").getAttribute("data-opening-stage"), "invitation");
+    for (const selector of [".brand", ".music-shell", ".day-nav"]) {
+      assert.equal(await page.locator(selector).evaluate((element) => element.inert), false);
+      assert.equal(await page.locator(selector).evaluate((element) => getComputedStyle(element).opacity), "1");
+    }
+    // Card surfaces stay neutral; color is confined to the stall accents.
+    const stalls = await page.locator(".stop-label").evaluateAll((elements) =>
+      elements.map((element) => ({ bg: getComputedStyle(element).backgroundColor, border: getComputedStyle(element).borderColor })),
+    );
+    assert.equal(new Set(stalls.map((stall) => stall.bg)).size, 1);
+    assert.ok(new Set(stalls.map((stall) => stall.border)).size >= 6);
     await page
       .locator(".world-transition")
       .evaluate((element) =>
@@ -163,7 +205,7 @@ try {
     );
     assert.deepEqual(errors, []);
     console.log(
-      `${engine} ${width}×${height}: clear stopped text, reveal, button, scroll entry and schedules passed`,
+      `${engine} ${width}×${height}: slow clear text, staged controls, neutral/colorful stalls, reveal, button and schedules passed`,
     );
     await page.close();
   }
@@ -176,6 +218,11 @@ try {
     await reduced.locator('.greeting-frame[aria-hidden="false"]').count(),
     5,
   );
+  await reduced.locator(".greeting-frame").last().evaluate((element) =>
+    scrollTo(0, element.getBoundingClientRect().top + scrollY - innerHeight * 0.4),
+  );
+  await reduced.waitForFunction(() => document.querySelector(".invitation").dataset.openingStage === "announcement");
+  assert.equal(await reduced.locator(".music-shell").evaluate((element) => element.inert), false);
   await reduced.locator(".pixel-enter").click();
   await reduced.waitForFunction(
     () =>

@@ -97,6 +97,7 @@ function PartyPreview() {
         {wedding.party.activities.map((activity) => (
           <button
             key={activity.id}
+            data-activity={activity.id}
             className={`map-stop ${selected.has(activity.id) ? "selected" : ""}`}
             style={{ left: `${activity.x}%`, top: `${activity.y}%` }}
             onClick={() => toggle(activity.id)}

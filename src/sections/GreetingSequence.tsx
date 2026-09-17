@@ -20,7 +20,6 @@ export function GreetingSequence({
       aria-label={wedding.intro.label}
     >
       <div className="greeting-sticky">
-        <p className="greeting-label eyebrow">{wedding.intro.label}</p>
         {wedding.greeting.map((greeting, index) => {
           return (
             <div
@@ -52,17 +51,6 @@ export function GreetingSequence({
             </div>
           );
         })}
-        <div className="greeting-footer">
-          <span>
-            {wedding.intro.scroll} <span aria-hidden="true">↓</span>
-          </span>
-          <div className="sequence-dots" aria-hidden="true">
-            {wedding.greeting.map((_, i) => (
-              <i key={i} className={i === current ? "active" : ""} />
-            ))}
-          </div>
-          <a href="#day1">{wedding.intro.skip} ↗</a>
-        </div>
       </div>
     </section>
   );

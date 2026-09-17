@@ -32,6 +32,9 @@ try {
   await page.evaluate(
     () => (document.documentElement.style.scrollBehavior = "auto"),
   );
+  await page.locator("#day1").evaluate((element) =>
+    scrollTo(0, element.getBoundingClientRect().top + scrollY),
+  );
   await page.locator(".music-control").click();
   await page.waitForFunction(
     () => document.querySelector(".invitation").dataset.audioTrack === "day1",
