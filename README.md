@@ -91,7 +91,7 @@ npm run prepare:assets
 
 | 章节             | 曲目                           | 当前文件                       |
 | ---------------- | ------------------------------ | ------------------------------ |
-| Day 1            | 待选择婚礼轻音乐               | `day1.src` 为空                |
+| Day 1            | Rain · 秦基博                  | `/audio/rain.mp3`              |
 | 世界转换         | Fall (Ghost Synth)，前 24 秒   | `/audio/fall.mp3`              |
 | Day 2 主图与日程 | Flower Dance                   | `/audio/flower-dance.mp3`      |
 | 活动地图         | Pelican Town                   | `/audio/pelican-town.mp3`      |
@@ -99,13 +99,15 @@ npm run prepare:assets
 
 首次打开页面不播放、不请求音频。宾客点击音乐按钮，或在“我们要结婚啦”之后点击配乐入口，才开启音乐。
 
-Day 1 尚无音频时保持安静；开启后会等待进入转场。音乐由当前阅读章节决定，向上滚动也会返回对应曲目，不要求宾客停留固定时长。快速跨章节时以最后到达的章节为准。
+Day 1 主动开启后播放 Rain。音乐由当前阅读章节决定，向上滚动也会返回对应曲目，不要求宾客停留固定时长。快速跨章节时以最后到达的章节为准。
 
 使用 Web Audio 的 GainNode 做约 3 秒淡入淡出，避免依赖 iOS 对 HTMLAudioElement.volume 的支持。Flower Dance、Pelican Town 与结尾音乐保留完整曲目并循环；结尾的目标音量降低。切到后台时挂起音频，返回时尝试恢复；失败时保留重试入口。
 
-用户提供的原始 MP3 保留在根目录，网页版本以 160 kbps 重新编码并移除封面元数据。转场约 470 KB、Flower Dance 约 588 KB，其余两首约 2–3 MB，按需加载与缓存。没有使用未提供的 Overture。
+Rain 从用户指定的 [Bilibili 视频 BV1at411L7Px](https://www.bilibili.com/video/BV1at411L7Px/) 提取，完整时长约 7 分 34 秒。根目录 `rain.mp3` 为较高质量的完整文件；`public/audio/rain.mp3` 为 128 kbps 的完整网页版本，约 6.9 MiB。Day 1 使用流式媒体播放并通过 Web Audio 淡入淡出，不等待整首下载和解码；不会在用户开启音乐前请求文件。
 
-以后选择好 Day 1 音乐后，将文件放入 `public/audio/day1.mp3`，设置 `audio.tracks.day1.src = '/audio/day1.mp3'` 即可。其他曲目和淡入淡出时长也可在同一配置修改。
+用户提供的其余原始 MP3 保留在根目录，网页版本以 160 kbps 重新编码并移除封面元数据。转场约 470 KB、Flower Dance 约 588 KB，其余两首约 2–3 MB，按需加载与缓存。没有使用未提供的 Overture。
+
+如需更换 Day 1 音乐，替换 `public/audio/rain.mp3` 或修改 `audio.tracks.day1.src` 即可。`scripts/import-rain.mjs` 记录提取来源与步骤；它会保护已经存在的根目录 `rain.mp3`，不会覆盖原文件。其他曲目和淡入淡出时长也可在婚礼配置修改。
 
 ## 星露谷素材来源
 
@@ -129,6 +131,8 @@ npx playwright install webkit
 BROWSER_ENGINE=webkit npm run test:browser
 node scripts/verify-audio.mjs
 BROWSER_ENGINE=webkit node scripts/verify-audio.mjs
+node scripts/verify-rain.mjs
+BROWSER_ENGINE=webkit node scripts/verify-rain.mjs
 node scripts/verify-revisions.mjs
 BROWSER_ENGINE=webkit node scripts/verify-revisions.mjs
 ```
@@ -166,6 +170,6 @@ CI 直接使用 `public/` 中已经优化好的素材，不读取本地原片，
 ## 仍待补充
 
 - 至少 6 张故事照片、两天场地照片。
-- Day 1 音乐；补充两天下午及第一天晚宴的具体钟点，并确认草坪是否需要单独定位。
+- 补充两天下午及第一天晚宴的具体钟点，并确认草坪是否需要单独定位。
 - 如需更像本人的像素形象，再替换定制像素新人；当前使用提供的主图人物。
 - 手机逐屏审阅后，调整开场滚动长度、转场节奏和照片构图。

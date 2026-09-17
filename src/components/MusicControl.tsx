@@ -72,7 +72,13 @@ export function MusicControl({
         <i />
         <i />
       </span>
-      <span>{on ? wedding.ui.musicOn : wedding.ui.musicOff}</span>
+      <span>
+        {status === "loading"
+          ? wedding.ui.musicLoading
+          : on
+            ? wedding.ui.musicOn
+            : wedding.ui.musicOff}
+      </span>
       <span className="sr-only" role="status">
         {label}
       </span>

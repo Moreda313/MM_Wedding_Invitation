@@ -43,6 +43,7 @@ if (!process.argv.includes("--wiki-only")) {
     .webp({ quality: 92 })
     .toFile("public/assets/pixel/wedding-poster.webp");
   const audio = {
+    "rain.mp3": "rain.mp3",
     "21. Fall (Ghost Synth).mp3": "fall.mp3",
     "09. Flower Dance.mp3": "flower-dance.mp3",
     "08. Pelican Town.mp3": "pelican-town.mp3",
@@ -67,7 +68,7 @@ if (!process.argv.includes("--wiki-only")) {
       "-c:a",
       "libmp3lame",
       "-b:a",
-      "160k",
+      name === "rain.mp3" ? "128k" : "160k",
       "-ar",
       "44100",
       `public/audio/${name}`,

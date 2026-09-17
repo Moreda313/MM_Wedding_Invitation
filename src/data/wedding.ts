@@ -170,7 +170,7 @@ export const wedding = {
   audio: {
     fadeSeconds: 3,
     tracks: {
-      day1: { src: "", title: "Day 1 婚礼轻音乐", volume: 0.55 },
+      day1: { src: "/audio/rain.mp3", title: "Rain · 秦基博", volume: 0.55 },
       transition: {
         src: "/audio/fall.mp3",
         title: "Fall (Ghost Synth)",

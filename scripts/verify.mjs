@@ -175,8 +175,13 @@ try {
       await page.locator(".music-control").click();
       await page.waitForFunction(
         () =>
+          document.querySelector(".invitation").dataset.audioTrack === "day1" &&
           document.querySelector(".invitation").dataset.audioStatus ===
-          "waiting",
+            "playing",
+      );
+      assert.ok(
+        audioRequests.some((request) => request.endsWith("/rain.mp3")),
+        "Day 1 must request Rain after consent",
       );
       for (const [selector, scene, file] of [
         [".world-transition", "transition", "fall.mp3"],
