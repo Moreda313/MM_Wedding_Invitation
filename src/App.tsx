@@ -1,5 +1,10 @@
 import { wedding } from "./data/wedding";
-import { useMusicScene, useOpeningStage, useReveal } from "./hooks/useScroll";
+import {
+  useInitialAnchor,
+  useMusicScene,
+  useOpeningStage,
+  useReveal,
+} from "./hooks/useScroll";
 import { MusicControl, useMusic } from "./components/MusicControl";
 import { GreetingSequence } from "./sections/GreetingSequence";
 import { DayOne } from "./sections/DayOne";
@@ -8,6 +13,7 @@ import { DayTwo } from "./sections/DayTwo";
 import { Ending } from "./sections/Ending";
 
 export default function App() {
+  useInitialAnchor();
   const scene = useMusicScene();
   const openingStage = useOpeningStage(wedding.greeting.length);
   const showMusic = openingStage !== "opening";

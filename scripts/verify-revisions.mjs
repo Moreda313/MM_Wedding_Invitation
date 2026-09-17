@@ -209,6 +209,24 @@ try {
     );
     await page.close();
   }
+  const direct = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await direct.goto(`${url}#day2-info`, { waitUntil: "networkidle" });
+  await direct.waitForFunction(() =>
+    document.querySelector(".invitation").dataset.openingStage === "invitation" &&
+    Math.abs(document.querySelector("#day2-info").getBoundingClientRect().top - 80) < 3,
+  );
+  await direct.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    scrollTo(0, 0);
+  });
+  await direct.waitForTimeout(750);
+  assert.equal(await direct.locator(".invitation").getAttribute("data-opening-stage"), "opening");
+  for (const selector of [".brand", ".music-shell", ".day-nav"]) {
+    assert.equal(await direct.locator(selector).evaluate((element) =>
+      element.inert && getComputedStyle(element).opacity === "0"), true);
+  }
+  console.log(`${engine}: direct chapter entry and immersive opening on return passed`);
+  await direct.close();
   const reduced = await browser.newPage({
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",

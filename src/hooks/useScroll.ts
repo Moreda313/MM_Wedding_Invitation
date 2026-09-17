@@ -1,6 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import type { MusicScene } from "../data/wedding";
 
+export function useInitialAnchor() {
+  useEffect(() => {
+    // Safari can resolve the fragment before React has mounted its target.
+    let id: string;
+    try {
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch {
+      return;
+    }
+    if (!id) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: "instant",
+        block: "start",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+}
+
 export function useReducedMotion() {
   const [reduced, setReduced] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
