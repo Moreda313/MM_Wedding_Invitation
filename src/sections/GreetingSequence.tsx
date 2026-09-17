@@ -22,20 +22,11 @@ export function GreetingSequence({
       <div className="greeting-sticky">
         <p className="greeting-label eyebrow">{wedding.intro.label}</p>
         {wedding.greeting.map((greeting, index) => {
-          const distance = index - position;
-          const visible = Math.max(0, 1 - Math.abs(distance) * 1.65);
           return (
             <div
               key={index}
-              className={`greeting-frame ${index === 0 ? "first-greeting" : ""}`}
+              className={`greeting-frame ${index === 0 ? "first-greeting" : ""} ${index === current ? "is-current" : index < current ? "is-before" : ""}`}
               aria-hidden={!reduced && index !== current}
-              style={{
-                opacity: visible,
-                transform: `translateY(${distance * 35}px) scale(${1 - Math.min(Math.abs(distance), 1) * 0.04})`,
-                filter: `blur(${Math.min(Math.abs(distance), 1) * 8}px)`,
-                visibility: Math.abs(distance) > 1 ? "hidden" : "visible",
-                pointerEvents: index === current ? "auto" : "none",
-              }}
             >
               <h1>
                 {greeting.lines.map((line, lineIndex) => (

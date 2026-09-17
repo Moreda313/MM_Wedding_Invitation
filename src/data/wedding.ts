@@ -42,7 +42,8 @@ export const wedding = {
     mapUrl: "https://surl.amap.com/mzxjIZkp9A1",
     note: "不用太正式。\n来坐坐，听听音乐，和我们一起留下一个好日子。",
     schedule: [
-      { time: "待定", title: "花园婚礼", note: "具体时间，稍后告诉你。" },
+      { time: "下午", title: "草坪婚礼" },
+      { time: "晚上", title: "晚宴" },
     ],
     venuePhoto: {
       src: "",
@@ -62,11 +63,11 @@ export const wedding = {
     mapUrl: "https://surl.amap.com/dCdJgKy170lF",
     note: "一场秋日婚礼，\n也是和老朋友们相聚的好天气。",
     schedule: [
-      { time: "12:00", title: "一起吃午饭", note: "暂定 · 午宴后前往草坪" },
+      { time: "11:00", title: "午宴开始", note: "午宴后前往草坪" },
       {
-        time: "约 14:00",
+        time: "下午",
         title: "草坪婚礼与派对",
-        note: "暂定 · 留一个下午，慢慢玩",
+        note: "留一个下午，慢慢玩",
       },
     ],
     venuePhoto: {
@@ -93,9 +94,12 @@ export const wedding = {
   },
   transition: {
     before: "不过，故事还没有结束。",
-    title: ["睡个好觉。", "明天，换个世界见。"],
+    surprise: "One more thing…",
+    surpriseNote: "还有一件开心的事。",
+    title: ["一天，怎么够。", "明天，换个世界见。"],
     after: "把日子，过成喜欢的游戏。",
-    hint: "再往下，就是另一个小世界",
+    hint: "继续下滑，走进另一个小世界",
+    enter: "进入第二天",
   },
   pixel: {
     hero: "/assets/pixel/wedding-scene.webp",

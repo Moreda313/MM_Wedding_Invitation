@@ -51,7 +51,9 @@ scripts/
 - 2026.10.22，建德·杭州新安雷迪森酒店，新安江街道南山路1号。
 - 2026.10.23，遂昌·华侨东方大酒店，牡丹亭中路8号（近太和路）。
 - 两处高德导航链接与复制地址按钮。
-- Day 1 具体时间仍待定。Day 2 的 12:00 午宴、约 14:00 草坪活动来自初始方案，页面标记为“暂定”，待新人确认。
+- Day 1：下午草坪婚礼，晚上晚宴。Day 2：11:00 开始午宴，下午草坪婚礼与派对。尚未提供的下午与晚间具体钟点不做推测。
+
+开场按滚动位置切换句子，用短暂的时间动画淡入淡出；停在任意位置后，当前句子都会恢复为完全清晰。Day 2 转场先展示 “One more thing…” 的惊喜引导，再随下滑展开像素世界，也可以直接点击“进入第二天”像素按钮。
 
 ## 补充照片
 
@@ -127,6 +129,8 @@ npx playwright install webkit
 BROWSER_ENGINE=webkit npm run test:browser
 node scripts/verify-audio.mjs
 BROWSER_ENGINE=webkit node scripts/verify-audio.mjs
+node scripts/verify-revisions.mjs
+BROWSER_ENGINE=webkit node scripts/verify-revisions.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。
@@ -162,6 +166,6 @@ CI 直接使用 `public/` 中已经优化好的素材，不读取本地原片，
 ## 仍待补充
 
 - 至少 6 张故事照片、两天场地照片。
-- Day 1 音乐与具体时间；确认 Day 2 暂定时间和草坪是否需要单独定位。
+- Day 1 音乐；补充两天下午及第一天晚宴的具体钟点，并确认草坪是否需要单独定位。
 - 如需更像本人的像素形象，再替换定制像素新人；当前使用提供的主图人物。
 - 手机逐屏审阅后，调整开场滚动长度、转场节奏和照片构图。

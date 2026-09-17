@@ -7,7 +7,12 @@ import { assetUrl } from "../lib/assetUrl";
 export function DayTwo() {
   return (
     <div className="day-two">
-      <section className="day-two-hero section-pad" id="day2" data-music="day2">
+      <section
+        className="day-two-hero section-pad"
+        id="day2"
+        data-music="day2"
+        tabIndex={-1}
+      >
         <p className="eyebrow pixel-eyebrow">
           {wedding.day2.label} <span> / </span> {wedding.day2.date}
         </p>
