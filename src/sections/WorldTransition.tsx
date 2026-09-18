@@ -41,11 +41,9 @@ export function WorldTransition() {
           <div className="transition-teaser" aria-hidden={!reduced && revealed}>
             <p className="eyebrow">{wedding.transition.before}</p>
             <h2>{wedding.transition.surprise}</h2>
-            <p className="surprise-note">{wedding.transition.surpriseNote}</p>
           </div>
           <div className="transition-world" aria-hidden={!reduced && !revealed}>
             <div className="transition-copy">
-              <p className="eyebrow">{wedding.transition.before}</p>
               <h2>
                 {wedding.transition.title.map((line) => (
                   <span key={line}>{line}</span>

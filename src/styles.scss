@@ -285,8 +285,8 @@ p {
   border-color: #6f7c4e40;
 }
 .greeting {
-  height: 520vh;
-  height: 520svh;
+  height: 320vh;
+  height: 320svh;
   background: var(--paper);
 }
 .greeting-sticky {
@@ -397,12 +397,6 @@ p {
   z-index: 1;
   color: #4d5344;
 }
-.hero-top > p:last-child {
-  font-family: var(--serif);
-  font-size: 26px;
-  margin-top: 12px;
-  letter-spacing: 0.1em;
-}
 .hero-names {
   position: absolute;
   bottom: 80px;
@@ -438,16 +432,6 @@ p {
   font-size: 10px;
   margin-top: 15px;
   letter-spacing: 0.3em;
-}
-.hero-side {
-  position: absolute;
-  right: 20px;
-  top: 40%;
-  z-index: 1;
-  writing-mode: vertical-rl;
-  letter-spacing: 0.3em;
-  font-size: 10px;
-  color: #5a624f;
 }
 .day-info {
   padding-top: 92px;
@@ -628,7 +612,7 @@ p {
   padding-bottom: 110px;
 }
 .photo-story h2 {
-  margin-top: 18px;
+  margin-top: 0;
 }
 .story-grid {
   display: grid;
@@ -771,11 +755,6 @@ p {
   line-height: 1.2;
   letter-spacing: -0.055em;
   margin: 32px 0 22px;
-}
-.surprise-note {
-  font-family: var(--serif);
-  font-size: 22px;
-  letter-spacing: 0.06em;
 }
 .transition-world {
   display: flex;
@@ -1293,9 +1272,6 @@ p {
   max-width: 620px;
   margin: auto;
 }
-.ending .eyebrow {
-  color: var(--moss);
-}
 .sunset-sun {
   position: absolute;
   left: 50%;
@@ -1421,6 +1397,103 @@ p {
   color: #f8efde;
   font-size: 11px;
 }
+.invitation-summary {
+  background: var(--ivory);
+  color: var(--ink);
+  /* This final sheet includes its own header inset; align it with the viewport. */
+  scroll-margin-top: -80px;
+  padding: 82px 22px calc(85px + env(safe-area-inset-bottom));
+  min-height: 100svh;
+}
+.summary-inner {
+  max-width: 860px;
+  margin: auto;
+}
+.summary-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.summary-heading h2 {
+  font-size: 28px;
+  line-height: 1.4;
+}
+.summary-heading p {
+  color: var(--moss);
+  font-size: 13px;
+  margin-top: 7px;
+}
+.summary-heading span { margin: 0 7px; }
+.summary-days {
+  display: grid;
+  gap: 14px;
+}
+.summary-card {
+  padding: 14px 16px 8px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--moss);
+  background: #fffdfa;
+}
+.summary-day2 { border-top-color: var(--autumn-olive); }
+.summary-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--moss);
+}
+.summary-date h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.summary-date h3 span {
+  font-size: 11px;
+  font-weight: 400;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+.summary-date > p {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.summary-venue {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.5;
+  margin-top: 7px;
+}
+.summary-card .address { font-size: 12px; margin-top: 2px; }
+.summary-schedule {
+  margin: 11px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.summary-schedule > div { display: grid; grid-template-columns: 62px 1fr; }
+.summary-schedule dt { color: var(--moss); font-weight: 500; }
+.summary-schedule dd { margin: 0; }
+.summary-card .map-actions { margin-top: 10px; gap: 24px; }
+.summary-card .map-actions a { padding: 9px 15px; min-height: 44px; gap: 20px; }
+.summary-card .map-actions button { min-height: 44px; }
+.summary-card .copy-status { min-height: 18px; margin-top: 2px; }
+.summary-note { color: var(--muted); font-size: 11px; margin-top: 15px; text-align: center; }
+.summary-top { display: flex; width: fit-content; margin: 12px auto 0; color: var(--moss); }
+@media (min-width: 700px) {
+  .summary-days { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .invitation-summary { display: grid; align-items: center; }
+  .summary-inner { width: 100%; }
+  .summary-card { padding: 24px 24px 16px; }
+  .summary-heading { margin-bottom: 32px; }
+}
+@media (max-width: 360px) {
+  .invitation-summary { padding-left: 16px; padding-right: 16px; }
+  .summary-card { padding-left: 12px; padding-right: 12px; }
+  .summary-date { align-items: flex-start; }
+  .summary-date h3 span { display: block; margin-left: 0; }
+}
 @media (min-width: 700px) {
   .site-header {
     padding-left: 40px;
@@ -1441,9 +1514,6 @@ p {
   .hero-top {
     top: 70px;
     left: 50px;
-  }
-  .hero-top > p:last-child {
-    font-size: 34px;
   }
   .hero-names {
     bottom: 75px;

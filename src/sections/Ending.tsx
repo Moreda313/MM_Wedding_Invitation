@@ -4,12 +4,11 @@ import { assetUrl } from "../lib/assetUrl";
 
 export function Ending() {
   return (
-    <footer className="ending section-pad" data-music="ending" id="ending">
+    <section className="ending section-pad" data-music="ending" id="ending">
       <div className="sunset-sun" aria-hidden="true" />
       <div className="sunset-hill back" aria-hidden="true" />
       <div className="sunset-hill front" aria-hidden="true" />
       <div className="ending-content">
-        <p className="eyebrow">{wedding.ending.eyebrow}</p>
         <div className="ending-picture">
           <img
             src={assetUrl(wedding.pixel.couple || wedding.pixel.hero)}
@@ -30,11 +29,11 @@ export function Ending() {
         <div className="ending-sprout">
           <PixelIcon name="Acorn" />
         </div>
-        <a className="text-link" href="#hello">
-          {wedding.ending.top}
-          <span aria-hidden="true">↑</span>
+        <a className="text-link" href="#info-summary">
+          {wedding.summary.enter}
+          <span aria-hidden="true">↓</span>
         </a>
       </div>
-    </footer>
+    </section>
   );
 }

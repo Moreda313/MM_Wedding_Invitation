@@ -71,7 +71,7 @@ try {
       await page
         .locator(".greeting")
         .evaluate((element) =>
-          scrollTo(0, (element.offsetHeight - innerHeight) / 4),
+          scrollTo(0, (element.offsetHeight - innerHeight) / 2),
         );
       await page.waitForTimeout(250);
       assert.equal(
@@ -94,6 +94,7 @@ try {
       "#day2-info",
       "#party",
       "#ending",
+      "#info-summary",
     ]) {
       await page
         .locator(selector)

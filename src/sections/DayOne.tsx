@@ -25,7 +25,6 @@ export function DayOne() {
           <p className="eyebrow">
             {wedding.day1.label} <span> / </span> {wedding.day1.date}
           </p>
-          <p>{wedding.hero.eyebrow}</p>
         </div>
         <div className="hero-names">
           <p className="monogram">{wedding.couple.monogram}</p>
@@ -36,9 +35,6 @@ export function DayOne() {
           </h2>
           <p>{wedding.hero.together}</p>
         </div>
-        <span className="hero-side" aria-hidden="true">
-          一起，走进下一章。
-        </span>
       </section>
       <DayInfo day={wedding.day1} />
       <PhotoStory />
@@ -50,12 +46,10 @@ function PhotoStory() {
   return (
     <section
       className="photo-story section-pad"
-      aria-label={wedding.story.eyebrow}
+      aria-label={wedding.story.title}
     >
       <div data-reveal>
-        <p className="eyebrow">{wedding.story.eyebrow}</p>
         <h2 className="preserve">{wedding.story.title}</h2>
-        <p className="body-copy">{wedding.story.note}</p>
       </div>
       <div className="story-grid">
         {wedding.story.photos.map((photo, index) => (
@@ -78,7 +72,7 @@ function PhotoStory() {
               </div>
             )}
             <figcaption>
-              {photo.caption || (index === 0 ? wedding.story.empty : "")}
+              {photo.caption}
             </figcaption>
           </figure>
         ))}

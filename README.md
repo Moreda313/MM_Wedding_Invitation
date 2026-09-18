@@ -32,7 +32,9 @@ src/
   sections/WorldTransition.tsx  真实照片 → 逐级像素化 → 星露谷场景
   sections/DayTwo.tsx           第二天主图、日程和可点选的活动地图
   sections/Ending.tsx           像素夕阳和结尾
+  sections/InvitationSummary.tsx 最后一页的双日时间、地点与安排汇总
   components/DayInfo.tsx        地图、复制地址、日程与场地照片
+  components/VenueActions.tsx   正文与汇总页共用的地图、复制地址操作
   components/MusicControl.tsx   音乐开关
   audio/AudioDirector.ts        用户手势启动、章节音乐、淡入淡出
   hooks/useScroll.ts            滚动进度、减少动态效果、进入视口显示
@@ -53,11 +55,13 @@ scripts/
 - 两处高德导航链接与复制地址按钮。
 - Day 1：下午草坪婚礼，晚上晚宴。Day 2：11:00 开始午宴，下午草坪婚礼与派对。尚未提供的下午与晚间具体钟点不做推测。
 
-开场按滚动位置切换句子：新句子用 1.2 秒缓慢淡入（延迟 0.12 秒），旧句子用 0.32 秒退出，避免长时间叠字；停在任意位置后，当前句子都会恢复为完全清晰，不绑定某个精确滚动角度。开场滚动长度为 520svh，无滚动锁定；减少动态效果时改为顺序阅读。
+开场收为三屏：问候与近况 → 有个好消息 → 我们要结婚啦。新句子用 1.2 秒缓慢淡入（延迟 0.12 秒），旧句子用 0.32 秒退出，避免长时间叠字；停在任意位置后，当前句子都会恢复为完全清晰。滚动长度由 520svh 缩短到 320svh，无滚动锁定；减少动态效果时改为顺序阅读。
 
 开场采用系统无衬线大字，只有问候文案，不显示品牌、音乐控件或日程导航。在“我们要结婚啦”时淡入音乐开关，婚纱照进入视口后淡入 M&M 与底部导航；隐藏控件同时设置 inert / aria-hidden，不会截获点击或键盘焦点。支持回滚、直达章节与减少动态效果。
 
-Day 2 转场先展示 “One more thing…” 的惊喜引导，再随下滑展开像素世界，也可以直接点击“进入第二天”像素按钮。
+Day 2 转场以“对了，还有个小彩蛋。”和 “One more thing…” 引导，像素化时展示“人生，也可以是星露谷。”，保留“把日子，过成喜欢的游戏。”作为副文案，也可直接点击“进入第二天”像素按钮。
+
+夕阳结尾之后增加独立“婚礼信息”汇总页（`#info-summary`），共用 `day1` / `day2` 配置生成日期、星期、城市、酒店、完整地址及日程，不维护第二套数据。每一天提供地图和复制地址按钮；底部导航增加“信息汇总”，结尾也有入口。该页保持结尾音乐，不自动开启音频；信息不依赖滚动显现动画，适合反复查看、截图保存。未提供的具体钟点明确注明待补充。
 
 ## 配色与视觉边界
 
@@ -147,6 +151,7 @@ node scripts/verify-rain.mjs
 BROWSER_ENGINE=webkit node scripts/verify-rain.mjs
 node scripts/verify-revisions.mjs
 BROWSER_ENGINE=webkit node scripts/verify-revisions.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-summary.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。

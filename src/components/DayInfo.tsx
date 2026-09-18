@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { wedding, type WeddingDay } from "../data/wedding";
 import { assetUrl } from "../lib/assetUrl";
+import { VenueActions } from "./VenueActions";
 
 export function DayInfo({
   day,
@@ -9,29 +9,6 @@ export function DayInfo({
   day: WeddingDay;
   autumn?: boolean;
 }) {
-  const [message, setMessage] = useState("");
-  async function copy() {
-    try {
-      if (navigator.clipboard && window.isSecureContext)
-        await navigator.clipboard.writeText(
-          `${day.city} · ${day.venue} ${day.address}`,
-        );
-      else {
-        const input = document.createElement("textarea");
-        input.value = `${day.venue} ${day.address}`;
-        input.style.cssText = "position:fixed;top:0;left:0;opacity:0";
-        document.body.append(input);
-        input.focus();
-        input.select();
-        const success = document.execCommand("copy");
-        input.remove();
-        if (!success) throw new Error("Clipboard unavailable");
-      }
-      setMessage(wedding.ui.copied);
-    } catch {
-      setMessage(wedding.ui.copyFailed);
-    }
-  }
   return (
     <section
       className={`day-info section-pad ${autumn ? "autumn-info" : ""}`}
@@ -57,16 +34,7 @@ export function DayInfo({
           <span className="small-label">{wedding.ui.location}</span>
           <h3>{day.venue}</h3>
           <p className="address">{day.address}</p>
-          <div className="map-actions">
-            <a href={day.mapUrl} target="_blank" rel="noreferrer">
-              {wedding.ui.navigate}
-              <span aria-hidden="true">↗</span>
-            </a>
-            <button onClick={copy}>{wedding.ui.copy}</button>
-          </div>
-          <p className="copy-status" role="status">
-            {message}
-          </p>
+          <VenueActions day={day} />
         </div>
         <div className="schedule">
           <span className="small-label">{wedding.ui.schedule}</span>

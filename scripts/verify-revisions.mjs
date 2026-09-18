@@ -42,15 +42,14 @@ try {
     assert.ok(!/Songti|Georgia|SimSun/.test(font.family), "Opening must use modern sans-serif");
     // The incoming sentence stays pale long enough to notice, then always settles.
     await page.locator(".greeting").evaluate((element) =>
-      scrollTo(0, (element.offsetHeight - innerHeight) * 0.25),
+      scrollTo({ top: (element.offsetHeight - innerHeight) * 0.5, behavior: "instant" }),
     );
     await page.waitForTimeout(450);
     const midway = await page.locator(".greeting-frame.is-current").evaluate((element) => +getComputedStyle(element).opacity);
     assert.ok(midway > 0.03 && midway < 0.65, `Expected a slow fade, got ${midway}`);
     // Stop between the old exact positions, at boundaries, and when scrolling back.
     for (const fraction of [
-      0.07, 0.124, 0.126, 0.23, 0.374, 0.376, 0.49, 0.51, 0.624, 0.626, 0.87,
-      0.93, 0.42, 0.1,
+      0.07, 0.249, 0.251, 0.49, 0.51, 0.749, 0.751, 0.93, 0.42, 0.1,
     ]) {
       await page
         .locator(".greeting")
@@ -236,7 +235,7 @@ try {
   await reduced.goto(url, { waitUntil: "networkidle" });
   assert.equal(
     await reduced.locator('.greeting-frame[aria-hidden="false"]').count(),
-    5,
+    3,
   );
   await reduced.locator(".greeting-frame").last().evaluate((element) =>
     scrollTo(0, element.getBoundingClientRect().top + scrollY - innerHeight * 0.4),

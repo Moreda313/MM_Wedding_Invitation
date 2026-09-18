@@ -11,6 +11,7 @@ import { DayOne } from "./sections/DayOne";
 import { WorldTransition } from "./sections/WorldTransition";
 import { DayTwo } from "./sections/DayTwo";
 import { Ending } from "./sections/Ending";
+import { InvitationSummary } from "./sections/InvitationSummary";
 
 export default function App() {
   useInitialAnchor();
@@ -58,6 +59,7 @@ export default function App() {
         <WorldTransition />
         <DayTwo />
         <Ending />
+        <InvitationSummary />
       </main>
       <nav
         className="day-nav chrome-piece"
@@ -69,6 +71,8 @@ export default function App() {
         <a href="#day1-info">{wedding.ui.jumpDay1}</a>
         <span />
         <a href="#day2-info">{wedding.ui.jumpDay2}</a>
+        <span />
+        <a href="#info-summary">{wedding.ui.jumpSummary}</a>
       </nav>
     </div>
   );
