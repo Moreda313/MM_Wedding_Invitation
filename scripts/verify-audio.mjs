@@ -1,11 +1,13 @@
 import { chromium, webkit } from 'playwright';
 import assert from 'node:assert/strict';
+import { mutedSession } from './muted-session.mjs';
 
 const url = process.env.PREVIEW_URL || 'http://127.0.0.1:5173';
 const engine = process.env.BROWSER_ENGINE || 'chromium';
 const browser = engine === 'webkit' ? await webkit.launch() : await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' });
 try {
   const page = await browser.newPage({ viewport: { width:390, height:844 } });
+  await mutedSession(page);
   await page.addInitScript(() => {
     const resume = AudioContext.prototype.resume;
     AudioContext.prototype.resume = function () {

@@ -1,4 +1,12 @@
 /* System Chinese fonts keep the first screen independent of external requests. */
+@font-face {
+  font-family: "Wedding Script";
+  src: url("/assets/fonts/great-vibes-hi.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0048, U+0069;
+}
 
 :root {
   font-family:
@@ -285,8 +293,8 @@ p {
   border-color: #6f7c4e40;
 }
 .greeting {
-  height: 320vh;
-  height: 320svh;
+  height: 260vh;
+  height: 260svh;
   background: var(--paper);
 }
 .greeting-sticky {
@@ -317,8 +325,8 @@ p {
   /* Time-based, not scroll-based: any stopping point becomes fully legible.
      A short exit avoids overlapping sentences; the new text arrives slowly. */
   transition:
-    opacity 1.2s cubic-bezier(0.33, 0, 0.67, 1) 0.12s,
-    transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.85s cubic-bezier(0.33, 0, 0.67, 1) 0.08s,
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .greeting-frame.is-before {
   transform: translateY(-14px);
@@ -338,19 +346,21 @@ p {
   line-height: 1.4;
 }
 .first-greeting h1 span:first-child {
-  font-size: 0.67em;
-  line-height: 1.8;
+  font-family: "Wedding Script", "Snell Roundhand", cursive;
+  font-size: 1.2em;
+  line-height: 1.4;
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   color: var(--moss);
 }
 .greeting-note {
-  font-size: 12px;
+  font-size: 17px;
   color: var(--muted);
   line-height: 2;
   margin-top: 28px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.025em;
 }
+.first-greeting .greeting-note { font-size: clamp(22px, 6vw, 28px); }
 .greeting-music {
   align-self: flex-start;
   margin-top: 26px;
@@ -592,9 +602,9 @@ p {
 }
 .venue-photo img {
   width: 100%;
-  aspect-ratio: 1.7;
-  object-fit: cover;
+  height: auto;
 }
+.venue-full { margin-top: 10px; color: var(--moss); }
 .venue-photo figcaption {
   display: flex;
   justify-content: space-between;
@@ -1503,7 +1513,7 @@ p {
     padding-left: max(12%, calc((100vw - 800px) / 2));
   }
   .greeting-note {
-    font-size: 14px;
+    font-size: 19px;
   }
   .day-one-hero {
     height: 1080px;

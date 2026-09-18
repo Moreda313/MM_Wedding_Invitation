@@ -17,9 +17,9 @@ export default function App() {
   useInitialAnchor();
   const scene = useMusicScene();
   const openingStage = useOpeningStage(wedding.greeting.length);
-  const showMusic = openingStage !== "opening";
+  const showMusic = true;
   const showNavigation = openingStage === "invitation";
-  const { status, track, toggle } = useMusic(scene);
+  const { status, track, enabled, toggle, enableMusic } = useMusic(scene);
   useReveal();
   const autumn = scene !== "day1";
   return (
@@ -28,6 +28,7 @@ export default function App() {
       data-scene={scene}
       data-audio-status={status}
       data-audio-track={track || ""}
+      data-music-enabled={enabled}
       data-opening-stage={openingStage}
     >
       <header className="site-header">
@@ -52,8 +53,8 @@ export default function App() {
       </header>
       <main>
         <GreetingSequence
-          onMusic={toggle}
-          musicEnabled={status !== "off" && status !== "error"}
+          onMusic={enableMusic}
+          musicEnabled={enabled}
         />
         <DayOne />
         <WorldTransition />

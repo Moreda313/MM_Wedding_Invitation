@@ -1,6 +1,7 @@
 import { chromium, webkit } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
+import { mutedSession } from "./muted-session.mjs";
 
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:5173";
 const engine = process.env.BROWSER_ENGINE || "chromium";
@@ -24,16 +25,18 @@ try {
       hasTouch: true,
     });
     const errors = [];
+    await mutedSession(page);
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(url, { waitUntil: "networkidle" });
     await page.evaluate(
       () => (document.documentElement.style.scrollBehavior = "auto"),
     );
     assert.equal(await page.locator(".invitation").getAttribute("data-opening-stage"), "opening");
-    for (const selector of [".brand", ".music-shell", ".day-nav"]) {
+    for (const selector of [".brand", ".day-nav"]) {
       assert.equal(await page.locator(selector).evaluate((element) => element.inert), true);
       assert.equal(await page.locator(selector).evaluate((element) => getComputedStyle(element).opacity), "0");
     }
+    assert.equal(await page.locator(".music-shell").evaluate((element) => element.inert), false);
     const font = await page.locator(".first-greeting h1").evaluate((element) => ({
       size: parseFloat(getComputedStyle(element).fontSize),
       family: getComputedStyle(element).fontFamily,
@@ -209,6 +212,7 @@ try {
     await page.close();
   }
   const direct = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await mutedSession(direct);
   await direct.goto(`${url}#day2-info`, { waitUntil: "networkidle" });
   await direct.waitForFunction(() =>
     document.querySelector(".invitation").dataset.openingStage === "invitation" &&
@@ -218,11 +222,11 @@ try {
     scrollTo({ top: 0, behavior: "instant" });
   });
   await direct.waitForFunction(() =>
-    [...document.querySelectorAll(".chrome-piece")].every((element) =>
+    [...document.querySelectorAll(".brand, .day-nav")].every((element) =>
       element.inert && getComputedStyle(element).opacity === "0"),
   );
   assert.equal(await direct.locator(".invitation").getAttribute("data-opening-stage"), "opening");
-  for (const selector of [".brand", ".music-shell", ".day-nav"]) {
+  for (const selector of [".brand", ".day-nav"]) {
     assert.equal(await direct.locator(selector).evaluate((element) =>
       element.inert && getComputedStyle(element).opacity === "0"), true);
   }
@@ -232,6 +236,7 @@ try {
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",
   });
+  await mutedSession(reduced);
   await reduced.goto(url, { waitUntil: "networkidle" });
   assert.equal(
     await reduced.locator('.greeting-frame[aria-hidden="false"]').count(),

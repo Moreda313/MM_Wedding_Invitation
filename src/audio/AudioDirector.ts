@@ -1,7 +1,7 @@
 import { wedding, type MusicScene } from "../data/wedding";
 import { assetUrl } from "../lib/assetUrl";
 
-export type AudioStatus = "off" | "loading" | "playing" | "waiting" | "error";
+export type AudioStatus = "off" | "loading" | "playing" | "waiting" | "blocked" | "error";
 type Voice = { source: AudioBufferSourceNode; gain: GainNode };
 type StreamingVoice = {
   audio: HTMLAudioElement;
@@ -20,33 +20,40 @@ export class AudioDirector {
   private generation = 0;
   private enabled = false;
   private disposed = false;
+  private activeScene?: MusicScene;
   constructor(
     private report: (status: AudioStatus, scene?: MusicScene) => void,
   ) {}
 
   async enable(scene: MusicScene) {
+    if (this.disposed) return;
     const request = ++this.generation;
     this.enabled = true;
     try {
       this.context ??= new AudioContext();
-      // This call runs directly in the button's gesture, before any fetch.
+      // Try autoplay; if blocked, retry from a real user gesture.
       const resumed = this.context.resume();
+      if (this.context.state !== "running") this.report("blocked");
       // Start the streaming media element in the original user gesture on iOS.
       if (scene === "day1" && wedding.audio.tracks.day1.src) {
-        await Promise.all([resumed, this.setScene(scene)]);
+        await Promise.all([resumed, this.setScene(scene, true)]);
         return;
       }
       await resumed;
       if (this.disposed || !this.enabled || request !== this.generation) return;
       await this.setScene(scene);
-    } catch {
+    } catch (error) {
       if (!this.disposed && this.enabled && request === this.generation)
-        this.report("error");
+        this.report(this.isBlocked(error) ? "blocked" : "error");
     }
   }
 
-  async setScene(scene: MusicScene) {
+  async setScene(scene: MusicScene, fromEnable = false) {
     if (!this.enabled || !this.context || this.disposed) return;
+    if (!fromEnable && this.context.state !== "running") {
+      this.report("blocked");
+      return;
+    }
     const request = ++this.generation;
     const context = this.context;
     const track = wedding.audio.tracks[scene];
@@ -55,7 +62,7 @@ export class AudioDirector {
       this.report("waiting");
       return;
     }
-    this.report("loading");
+    this.report(context.state === "running" ? "loading" : "blocked");
     try {
       if (scene === "day1") {
         const stream = this.getDayOne();
@@ -70,6 +77,7 @@ export class AudioDirector {
           return;
         this.fadeOut(wedding.audio.fadeSeconds, true);
         this.ramp(stream.gain, track.volume, wedding.audio.fadeSeconds);
+        this.activeScene = scene;
         this.report("playing", scene);
         return;
       }
@@ -111,13 +119,18 @@ export class AudioDirector {
         this.voices.delete(voice);
       };
       source.start();
+      this.activeScene = scene;
       this.report("playing", scene);
-    } catch {
+    } catch (error) {
       if (request === this.generation && !this.disposed) {
         this.fadeOut(0.4);
-        this.report("error");
+        this.report(this.isBlocked(error) ? "blocked" : "error");
       }
     }
+  }
+
+  private isBlocked(error: unknown) {
+    return error instanceof DOMException && error.name === "NotAllowedError";
   }
 
   private getDayOne(): StreamingVoice {
@@ -188,13 +201,20 @@ export class AudioDirector {
       if (hidden) {
         this.dayOne?.audio.pause();
         await this.context.suspend();
+        if (this.enabled && !this.disposed) this.report("waiting");
       } else {
-        await this.context.resume();
+        const resumed = this.context.resume();
+        if (this.context.state !== "running") this.report("blocked");
+        await resumed;
+        if (!this.enabled || this.disposed) return;
         if (this.enabled && !this.disposed && this.dayOne?.wanted)
           await this.dayOne.audio.play();
+        if (this.enabled && !this.disposed && this.activeScene)
+          this.report("playing", this.activeScene);
       }
-    } catch {
-      if (!this.disposed) this.report("error");
+    } catch (error) {
+      if (!this.disposed && this.enabled)
+        this.report(this.isBlocked(error) ? "blocked" : "error");
     }
   }
   dispose() {

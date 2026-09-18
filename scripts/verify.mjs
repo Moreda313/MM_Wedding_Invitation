@@ -1,6 +1,7 @@
 import { chromium, webkit } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
+import { mutedSession } from "./muted-session.mjs";
 
 await mkdir("test-results", { recursive: true });
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:5173";
@@ -28,6 +29,7 @@ try {
       hasTouch: width < 500,
     });
     const page = await context.newPage();
+    await mutedSession(page);
     const errors = [],
       badResponses = [],
       audioRequests = [];
@@ -152,7 +154,8 @@ try {
       "Scrolling without consent must never fetch audio",
     );
     assert.equal(await page.locator(".story-photo").count(), 6);
-    assert.equal(await page.locator(".venue-placeholder").count(), 2);
+    assert.equal(await page.locator(".venue-placeholder").count(), 0);
+    assert.equal(await page.locator(".venue-photo img").count(), 2);
     assert.equal(
       await page.locator("#day1-info .map-actions a").getAttribute("href"),
       "https://surl.amap.com/mzxjIZkp9A1",

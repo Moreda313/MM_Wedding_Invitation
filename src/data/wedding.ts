@@ -1,5 +1,11 @@
 export type MusicScene = "day1" | "transition" | "day2" | "party" | "ending";
-export type Photo = { src: string; alt: string; caption: string };
+export type Photo = {
+  src: string; alt: string; caption: string;
+  srcSet?: { src: string; width: number }[];
+  full?: string;
+  width?: number;
+  height?: number;
+};
 export type WeddingDay = {
   id: string;
   label: string;
@@ -18,8 +24,8 @@ export type WeddingDay = {
 export const wedding = {
   couple: { groom: "毛凌涛", bride: "陈婉梦", monogram: "M & M" },
   greeting: [
-    { lines: ["Hi，", "好久不见。"], note: "近来可好？" },
-    { lines: ["有个好消息，", "想和你分享。"], note: "" },
+    { lines: ["Hi", "好久不见。"], note: "近来可好？" },
+    { lines: ["浪漫的人生时刻", "想和你分享。"], note: "" },
     { lines: ["我们要", "结婚啦！"], note: "想请你来，和我们一起庆祝。" },
   ],
   intro: {
@@ -29,7 +35,7 @@ export const wedding = {
   day1: {
     id: "day1",
     label: "Day 1",
-    title: "草坪上的婚礼",
+    title: "在花园里，一起见面。",
     date: "2026.10.22",
     weekday: "星期四",
     city: "建德",
@@ -38,13 +44,17 @@ export const wedding = {
     mapUrl: "https://surl.amap.com/mzxjIZkp9A1",
     note: "想请你见证我们的婚礼，\n也想借这个机会，好好聚一聚。",
     schedule: [
+      { time: "上午", title: "接新娘" },
       { time: "下午", title: "草坪婚礼" },
       { time: "晚上", title: "晚宴" },
     ],
     venuePhoto: {
-      src: "",
-      alt: "建德婚礼场地",
-      caption: "建德 · 草坪仪式场地",
+      src: "/assets/photos/day1-place-960.webp",
+      srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day1-place-${width}.webp`, width })),
+      full: "/assets/photos/day1-place-1440.webp",
+      width: 1440, height: 1080,
+      alt: "建德婚礼场地示意图：白绿花园中的仪式区、观礼席、甜品区和迎宾区",
+      caption: "建德 · 场地示意图",
     },
   } satisfies WeddingDay,
   day2: {
@@ -67,9 +77,12 @@ export const wedding = {
       },
     ],
     venuePhoto: {
-      src: "",
-      alt: "遂昌婚礼草坪",
-      caption: "遂昌 · 草坪仪式与派对场地",
+      src: "/assets/photos/day2-place-960.webp",
+      srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day2-place-${width}.webp`, width })),
+      full: "/assets/photos/day2-place-1440.webp",
+      width: 1440, height: 1080,
+      alt: "遂昌婚礼场地示意图：秋日星露谷风格的花拱、木椅、花草和山景",
+      caption: "遂昌 · 场地示意图",
     },
   } satisfies WeddingDay,
   hero: {
@@ -85,7 +98,7 @@ export const wedding = {
     })) as Photo[],
   },
   transition: {
-    before: "对了，还有个小彩蛋。",
+    before: "等等，似乎还差点什么？",
     surprise: "One more thing…",
     title: ["人生，", "也可以是星露谷。"],
     after: "把日子，过成喜欢的游戏。",
@@ -138,7 +151,7 @@ export const wedding = {
   },
   summary: {
     title: "婚礼信息",
-    note: "下午仪式及第一天晚宴的具体钟点待补充。",
+    note: "接亲、下午仪式及第一天晚宴的具体钟点待补充。",
     enter: "查看时间与地点",
   },
   ui: {
@@ -156,12 +169,15 @@ export const wedding = {
     musicOff: "开启音乐",
     musicLoading: "音乐加载中",
     musicWaiting: "音乐待播放",
+    musicBlocked: "音乐待播放",
+    musicBlockedHint: "音乐待播放，轻触页面可播放；点击此按钮关闭音乐",
     musicError: "播放失败，点击重试",
     enableMusic: "开启音乐，继续看看",
     continue: "继续往下看",
     jumpDay1: "第一天 · 建德",
     jumpDay2: "第二天 · 遂昌",
     jumpSummary: "信息汇总",
+    viewVenue: "查看大图",
   },
   audio: {
     fadeSeconds: 3,

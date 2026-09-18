@@ -9,5 +9,7 @@ test-results/
 /*.mp3
 /*.zip
 /星露谷.png
+/day1_place.png
+/day2_place.png
 /.env
 /.env.*

@@ -1,6 +1,7 @@
 import { chromium, webkit } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
+import { mutedSession } from "./muted-session.mjs";
 
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:4176/";
 await mkdir("test-results", { recursive: true });
@@ -13,6 +14,7 @@ for (const engine of [chromium, webkit]) {
       const page = await browser.newPage({ viewport: { width, height },
         isMobile: width < 700, hasTouch: width < 700 });
       const errors = [], audio = [];
+      await mutedSession(page);
       page.on("pageerror", (error) => errors.push(error.message));
       page.on("request", (request) => {
         if (request.url().endsWith(".mp3")) audio.push(request.url());

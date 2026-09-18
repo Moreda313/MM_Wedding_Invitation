@@ -1,5 +1,6 @@
 import { chromium, webkit } from "playwright";
 import assert from "node:assert/strict";
+import { mutedSession } from "./muted-session.mjs";
 
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:5173";
 const engine = process.env.BROWSER_ENGINE || "chromium";
@@ -16,6 +17,7 @@ try {
     isMobile: true,
     hasTouch: true,
   });
+  await mutedSession(page);
   await page.addInitScript(() => {
     const original = AudioContext.prototype.createMediaElementSource;
     AudioContext.prototype.createMediaElementSource = function (audio) {

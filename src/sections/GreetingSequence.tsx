@@ -41,7 +41,7 @@ export function GreetingSequence({
                   href="#day1"
                   tabIndex={reduced || index === current ? 0 : -1}
                   onClick={() => {
-                    if (!musicEnabled) onMusic();
+                    onMusic();
                   }}
                 >
                   {musicEnabled ? wedding.ui.continue : wedding.ui.enableMusic}

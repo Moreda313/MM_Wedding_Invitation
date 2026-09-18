@@ -59,8 +59,13 @@ export function DayInfo({
         {day.venuePhoto.src ? (
           <img
             src={assetUrl(day.venuePhoto.src)}
+            srcSet={day.venuePhoto.srcSet?.map((image) => `${assetUrl(image.src)} ${image.width}w`).join(", ")}
+            sizes="(min-width: 860px) 730px, (min-width: 700px) calc(100vw - 130px), calc(100vw - 52px)"
+            width={day.venuePhoto.width}
+            height={day.venuePhoto.height}
             alt={day.venuePhoto.alt}
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div
@@ -75,6 +80,12 @@ export function DayInfo({
           <span>{wedding.ui.venue}</span>
           {day.venuePhoto.caption}
         </figcaption>
+        {day.venuePhoto.full && (
+          <a className="venue-full text-link" href={assetUrl(day.venuePhoto.full)}
+            target="_blank" rel="noreferrer" aria-label={`${day.city}场地示意图：${wedding.ui.viewVenue}`}>
+            {wedding.ui.viewVenue}<span aria-hidden="true">↗</span>
+          </a>
+        )}
       </figure>
     </section>
   );
