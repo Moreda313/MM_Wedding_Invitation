@@ -36,7 +36,7 @@ try {
       assert.equal(await page.locator(selector).evaluate((element) => element.inert), true);
       assert.equal(await page.locator(selector).evaluate((element) => getComputedStyle(element).opacity), "0");
     }
-    assert.equal(await page.locator(".music-shell").evaluate((element) => element.inert), false);
+    assert.equal(await page.locator(".music-shell").evaluate((element) => element.inert), true);
     const font = await page.locator(".first-greeting h1").evaluate((element) => ({
       size: parseFloat(getComputedStyle(element).fontSize),
       family: getComputedStyle(element).fontFamily,

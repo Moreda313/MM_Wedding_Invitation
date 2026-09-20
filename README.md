@@ -58,7 +58,7 @@ scripts/
 
 开场三屏：问候与近况 → 浪漫的人生时刻，想和你分享 → 我们要结婚啦。新句子用 0.85 秒淡入（延迟 0.08 秒），旧句子用 0.32 秒退出；停在任意位置后仍完全清晰。滚动长度由 320svh 缩短到 260svh，实际滚动行程减少约 27%，无滚动锁定；减少动态效果时顺序阅读。“近来可好？”为 22–28px，其余开场小字为 17px（桌面 19px）。
 
-开场中文采用系统无衬线大字；Hi 使用本地托管的 Great Vibes 花体子集（仅 H、i，约 6.7 KB），许可见 `public/assets/fonts/GreatVibes-OFL.txt`，不在运行时请求 Google Fonts。音乐开关从开场起可见，便于随时关闭默认音乐；M&M 与底部导航仍在婚纱照进入视口后出现。隐藏控件设置 inert / aria-hidden。支持回滚、直达章节与减少动态效果。
+开场中文采用系统无衬线大字；Hi 使用本地托管的 Great Vibes 花体子集（仅 H、i，约 6.7 KB），许可见 `public/assets/fonts/GreatVibes-OFL.txt`，不在运行时请求 Google Fonts。前两段完全安静且不显示音乐按钮；到第三段“我们要结婚啦”才淡入 Rain 并显示开关。M&M 与底部导航仍在婚纱照进入视口后出现。隐藏控件设置 inert / aria-hidden。支持回滚、直达章节与减少动态效果。
 
 底部导航在向下连续滚动 32px 后收起，向上累计 16px 后显示，避免细小滚动抖动。进入汇总区保持显示；Tab、锚点变化会重新显示，键盘焦点在导航内时不收起，减少动态效果模式始终保留导航。音乐开关不受影响。
 
@@ -114,13 +114,13 @@ npm run prepare:assets
 | 活动地图         | Pelican Town                   | `/audio/pelican-town.mp3`      |
 | 结尾             | Dance Of The Moonlight Jellies | `/audio/moonlight-jellies.mp3` |
 
-音乐偏好默认开启，加载页面时尝试播放。浏览器允许时直接播放；若浏览器要求用户手势，界面显示“音乐待播放”，在真实触碰、点击或键盘操作时重试，不伪装成已播放。仅滚动事件不被当成播放授权。用户点击开关关闭后，页面交互、滚动、切换章节都不会重新开启；关闭偏好保存在当前浏览器会话内，刷新同样尊重关闭选择。
+音乐偏好默认开启，但不在页面加载时尝试播放。前两段问候不请求音频、不调用播放或音频解锁，点击和触摸也保持安静。进入“我们要结婚啦”才尝试播放 Rain；浏览器允许时直接播放，否则显示“音乐待播放”，在后续真实触碰、点击或键盘操作时重试，不伪装成已播放。仅滚动事件不被当成播放授权。用户点击开关关闭后，页面交互、滚动、切换章节都不会重新开启；关闭偏好保存在当前浏览器会话内，刷新同样尊重关闭选择。
 
-Day 1 播放 Rain。音乐由当前阅读章节决定，向上滚动也会返回对应曲目，不要求宾客停留固定时长。快速跨章节时以最后到达的章节为准。音乐开关从第一屏起可用，播放失败时提供重试。
+Day 1 播放 Rain。音乐由当前阅读章节决定，向上滚动也会返回对应曲目，不要求宾客停留固定时长。快速跨章节时以最后到达的章节为准。回到前两段问候会淡出并暂停、隐藏开关，但不把这种叙事性暂停写成用户静音偏好；再次到达婚讯时按原偏好恢复。通过锚点直达 Day 2 等章节，直接准备对应音乐，不先播放 Rain。音乐开关从婚讯起可用，播放失败时提供重试。
 
 使用 Web Audio 的 GainNode 做约 3 秒淡入淡出，避免依赖 iOS 对 HTMLAudioElement.volume 的支持。Flower Dance、Pelican Town 与结尾音乐保留完整曲目并循环；结尾的目标音量降低。切到后台时挂起音频，返回时尝试恢复；失败时保留重试入口。
 
-Rain 从用户指定的 [Bilibili 视频 BV1at411L7Px](https://www.bilibili.com/video/BV1at411L7Px/) 提取，完整时长约 7 分 34 秒。根目录 `rain.mp3` 为较高质量的完整文件；`public/audio/rain.mp3` 为 128 kbps 的完整网页版本，约 6.9 MiB。Day 1 使用流式媒体播放并通过 Web Audio 淡入淡出，不等待整首下载和解码；默认播放会产生音频请求，有关闭偏好的会话不主动请求音频。
+Rain 从用户指定的 [Bilibili 视频 BV1at411L7Px](https://www.bilibili.com/video/BV1at411L7Px/) 提取，完整时长约 7 分 34 秒。根目录 `rain.mp3` 为较高质量的完整文件；`public/audio/rain.mp3` 为 128 kbps 的完整网页版本，约 6.9 MiB。Day 1 使用流式媒体播放并通过 Web Audio 淡入淡出，不等待整首下载和解码；从婚讯开始的播放会产生音频请求，前两段及有关闭偏好的会话不主动请求音频。
 
 用户提供的其余原始 MP3 保留在根目录，网页版本以 160 kbps 重新编码并移除封面元数据。转场约 470 KB、Flower Dance 约 588 KB，其余两首约 2–3 MB，按需加载与缓存。没有使用未提供的 Overture。
 
@@ -161,6 +161,7 @@ PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autumn.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-memory-wall.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-venues.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-layout.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-share.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。
@@ -168,6 +169,14 @@ Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `
 覆盖 320×568、375×812、390×844、430×932 与桌面 1440×1000，检查横向溢出、场地图与花体、资源错误、11 张选片、照片墙大小与加载时机、地图链接、活动点选保存、五段音乐播放、关闭/恢复与减少动态效果。`verify-memory-wall.mjs` 另检查三档 Day 2 图片与当前原图逐字节相符、只发布确认照片、无 EXIF 元数据。原有手动开启场景通过 `muted-session.mjs` 设置宾客已关闭音乐的会话；独立 autoplay 检查覆盖真正允许自动播放、模拟拦截后手势解锁、启动中关闭及刷新后的关闭偏好。其他音频检查覆盖失败重试和快速滚动时的音频竞争。截图与报告输出到 `test-results/`。
 
 浏览器模拟不等于真实微信。正式发送前仍需在 iPhone 微信、Safari 和 Android 微信中检查：首次开启音乐、切到后台再返回、网络较慢时的播放、地图能否正常打开。局域网 HTTP 上会使用复制地址的兼容方式；正式部署使用 HTTPS。
+
+## 分享封面与元信息
+
+`cover.png` 仅为本地原图，不修改、不提交。执行 `node scripts/prepare-share-cover.mjs`，生成完整构图的 1200×630 JPEG `public/assets/share/cover-7e23e22c.jpg`（约 222KB，无 EXIF）。图片只在 `index.html` 分享元信息中引用，不插入正文，也不通过隐藏图片、预加载等方式占用正常浏览的带宽。
+
+HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网站名称及规范地址，以及 Twitter 大图卡片元信息。构建时写入绝对 HTTPS 地址，爬虫无需执行 JavaScript。默认正式地址是当前 GitHub Pages；迁移域名时务必设置 `VITE_SITE_URL=https://你的域名/ npm run build`（若放在子目录，同时设置 `--base=/子目录/`，并把 `VITE_SITE_URL` 设为对应完整目录地址）。这不是密钥，不含公众号凭据。
+
+OG 元信息不等于已完成微信自定义分享接口接入，不能保证微信各版本、直接粘贴链接和转发场景都显示指定卡片。若需要稳定控制“分享给朋友/朋友圈”标题、图片与描述，需另行提供具备接口权限的微信账号、配置 JS 接口安全域名，并通过服务端生成签名后接入 `updateAppMessageShareData` / `updateTimelineShareData`。AppSecret、access_token、jsapi_ticket 不应放入静态站或公开仓库。当前版本未声称完成这部分接入，需在正式域名上真机验证。参见[微信 JS-SDK 官方文档](https://developers.weixin.qq.com/doc/service/guide/h5/jssdk.html)。
 
 ## GitHub Pages 自动部署
 
@@ -188,7 +197,7 @@ CI 直接使用 `public/` 中已经优化好的素材，不读取本地原片，
 
 ## 部署到腾讯云 CloudBase
 
-1. 执行 `npm run build`。
+1. 确认正式 HTTPS 地址，执行 `VITE_SITE_URL=https://你的域名/ npm run build`，同步更新分享元信息中的网址。
 2. 在已开通静态托管的 CloudBase 环境中，将 `dist/` 内的文件上传到托管根目录；首页为 `index.html`。
 3. 用临时 HTTPS 域名在手机测试，确认后再绑定婚礼域名。
 4. 页面为单页滚动结构、没有客户端路由。普通 `npm run build` 使用根路径，适合独立域名；GitHub 工作流单独指定仓库子路径。

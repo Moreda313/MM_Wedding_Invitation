@@ -7,15 +7,17 @@ function initialPreference() {
   catch { return true; }
 }
 
-export function useMusic(scene: MusicScene) {
+export function useMusic(scene: MusicScene, allowed: boolean) {
   const [enabled, setEnabled] = useState(initialPreference);
-  const [status, setStatus] = useState<AudioStatus>(enabled ? "blocked" : "off");
+  const [status, setStatus] = useState<AudioStatus>("off");
   const [track, setTrack] = useState<MusicScene | undefined>();
   const director = useRef<AudioDirector | null>(null);
   const enabledRef = useRef(enabled);
   const statusRef = useRef(status);
   const sceneRef = useRef(scene);
+  const allowedRef = useRef(allowed);
   sceneRef.current = scene;
+  allowedRef.current = allowed;
   useEffect(() => {
     const instance = new AudioDirector((nextStatus, nextTrack) => {
       statusRef.current = nextStatus;
@@ -24,10 +26,10 @@ export function useMusic(scene: MusicScene) {
     });
     director.current = instance;
     const visibility = () => {
-      void instance.visibility(document.hidden);
+      if (allowedRef.current && enabledRef.current) void instance.visibility(document.hidden);
     };
     const unlock = (event: Event) => {
-      if (!event.isTrusted || !enabledRef.current || statusRef.current !== "blocked") return;
+      if (!event.isTrusted || !allowedRef.current || !enabledRef.current || statusRef.current !== "blocked") return;
       // Explicit controls own their gesture. Muting disables all automatic retries.
       if (event.target instanceof Element && event.target.closest(".music-control, .greeting-music")) return;
       void instance.enable(sceneRef.current);
@@ -35,19 +37,21 @@ export function useMusic(scene: MusicScene) {
     const gestures = ["pointerdown", "touchend", "click", "keydown"];
     gestures.forEach((event) => document.addEventListener(event, unlock, { passive: true }));
     document.addEventListener("visibilitychange", visibility);
-    const autoplay = window.setTimeout(() => {
-      if (enabledRef.current) void instance.enable(sceneRef.current);
-    }, 0);
     return () => {
-      clearTimeout(autoplay);
       instance.dispose();
       gestures.forEach((event) => document.removeEventListener(event, unlock));
       document.removeEventListener("visibilitychange", visibility);
     };
   }, []);
   useEffect(() => {
+    // The first two greetings are silent, even after touch/keyboard gestures.
+    // Returning to the opening pauses playback without changing the mute preference.
+    if (!allowed) director.current?.disable();
+    else if (enabledRef.current) void director.current?.enable(sceneRef.current);
+  }, [allowed]);
+  useEffect(() => {
     const timer = window.setTimeout(() => {
-      if (enabledRef.current && statusRef.current !== "blocked")
+      if (allowedRef.current && enabledRef.current && statusRef.current !== "blocked")
         void director.current?.setScene(scene);
     }, 180);
     return () => clearTimeout(timer);
@@ -59,10 +63,12 @@ export function useMusic(scene: MusicScene) {
     catch { /* Playback still works when storage is unavailable. */ }
   };
   const enableMusic = () => {
+    if (!allowedRef.current) return;
     preference(true);
     if (statusRef.current !== "playing") void director.current?.enable(sceneRef.current);
   };
   const toggle = () => {
+    if (!allowedRef.current) return;
     if (enabledRef.current && statusRef.current !== "error") {
       preference(false);
       director.current?.disable();

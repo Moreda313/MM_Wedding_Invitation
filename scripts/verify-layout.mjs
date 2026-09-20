@@ -18,7 +18,7 @@ for (const engine of [chromium, webkit]) {
       await page.goto(url, { waitUntil: "networkidle" });
       const nav = page.locator(".day-nav");
       assert.equal(await nav.getAttribute("data-visible"), "false");
-      assert.equal(await page.locator(".music-shell").getAttribute("data-visible"), "true");
+      assert.equal(await page.locator(".music-shell").getAttribute("data-visible"), "false");
       assert.ok(await page.locator(".world-transition").evaluate(e => Math.abs(e.offsetHeight / innerHeight - 2) < .02));
       assert.ok(await page.locator(".greeting").evaluate(e => Math.abs(e.offsetHeight / innerHeight - 2.6) < .02));
       for (const id of ["day1", "day1-info", "day2", "day2-info", "party", "memory-wall", "ending", "info-summary"]) {

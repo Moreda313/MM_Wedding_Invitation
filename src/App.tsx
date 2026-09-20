@@ -19,10 +19,10 @@ export default function App() {
   useInitialAnchor();
   const scene = useMusicScene();
   const openingStage = useOpeningStage(wedding.greeting.length);
-  const showMusic = true;
+  const showMusic = openingStage !== "opening";
   const showNavigation = openingStage === "invitation";
   const showDayNavigation = useReadingNavigation(showNavigation);
-  const { status, track, enabled, toggle, enableMusic } = useMusic(scene);
+  const { status, track, enabled, toggle, enableMusic } = useMusic(scene, showMusic);
   useReveal();
   const autumn = scene !== "day1";
   return (

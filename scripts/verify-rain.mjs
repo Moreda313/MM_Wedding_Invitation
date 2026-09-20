@@ -82,6 +82,8 @@ try {
   );
   await page.waitForFunction(() => window.__rain.paused);
   await page.evaluate(() => scrollTo(0, 0));
+  await page.waitForFunction(() => document.querySelector(".invitation").dataset.audioStatus === "off" && window.__rain.paused);
+  await page.locator("#day1").evaluate(e => e.scrollIntoView({ behavior: "instant" }));
   await page.waitForFunction(
     () =>
       document.querySelector(".invitation").dataset.audioTrack === "day1" &&
@@ -111,6 +113,8 @@ try {
     { timeout: 60000 },
   );
   await page.evaluate(() => scrollTo(0, 0));
+  await page.waitForFunction(() => document.querySelector(".invitation").dataset.audioStatus === "off");
+  await page.locator("#day1").evaluate(e => e.scrollIntoView({ behavior: "instant" }));
   await page.waitForFunction(
     () => document.querySelector(".invitation").dataset.audioTrack === "day1",
     {},
