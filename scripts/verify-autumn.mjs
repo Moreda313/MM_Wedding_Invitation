@@ -54,7 +54,7 @@ for (const engine of [chromium, webkit]) {
       assert.match(await page.locator(".summary-day2 .summary-schedule").innerText(), /14:00\s+草坪婚礼与派对/);
       for (const selector of ["#day2-info", ".summary-day2"]) {
         const link = page.locator(`${selector} .map-actions a`);
-        assert.match(await link.innerText(), /午宴酒店地图/);
+        assert.equal((await link.innerText()).replace("↗", "").trim(), selector === "#day2-info" ? "午宴酒店地图" : "打开地图");
         assert.equal(await link.getAttribute("href"), "https://surl.amap.com/dCdJgKy170lF");
       }
       await page.locator(".town-map").evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));

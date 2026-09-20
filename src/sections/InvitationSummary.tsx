@@ -31,7 +31,7 @@ export function InvitationSummary() {
                   </div>
                 ))}
               </dl>
-              <VenueActions day={day} />
+              <VenueActions day={day} mapLabel={wedding.ui.navigate} />
             </article>
           ))}
         </div>

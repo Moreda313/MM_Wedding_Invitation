@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { wedding, type WeddingDay } from "../data/wedding";
 
-export function VenueActions({ day }: { day: WeddingDay }) {
+export function VenueActions({ day, mapLabel = day.mapLabel }: { day: WeddingDay; mapLabel?: string }) {
   const [message, setMessage] = useState("");
   async function copy() {
     try {
@@ -33,7 +33,7 @@ export function VenueActions({ day }: { day: WeddingDay }) {
       <div className="map-actions">
         <a href={day.mapUrl} target="_blank" rel="noreferrer"
           aria-label={`${wedding.ui.navigate}：${day.city} · ${day.venue}`}>
-          {day.mapLabel}<span aria-hidden="true">↗</span>
+          {mapLabel}<span aria-hidden="true">↗</span>
         </a>
         <button onClick={copy} aria-label={`${wedding.ui.copy}：${day.venue}`}>
           {wedding.ui.copy}

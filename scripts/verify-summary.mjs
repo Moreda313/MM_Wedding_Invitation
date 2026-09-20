@@ -55,6 +55,7 @@ for (const engine of [chromium, webkit]) {
         const copy = await card.innerText();
         for (const value of [date, weekday, city, venue, address]) assert.ok(copy.includes(value), value);
         assert.equal(await card.locator(".map-actions a").getAttribute("href"), map);
+        assert.equal((await card.locator(".map-actions a").innerText()).replace("↗", "").trim(), "打开地图");
         const summaryRows = await card.locator(".summary-schedule > div").allTextContents();
         const sourceRows = await page.locator(`#${id}-info .schedule-row`).evaluateAll((rows) =>
           rows.map((row) => row.querySelector("span").textContent + row.querySelector("strong").textContent));
