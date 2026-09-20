@@ -22,16 +22,17 @@ npm run preview
 
 ## 内容与结构
 
-所有婚礼文案、姓名、日期、酒店、导航地址、照片位置与音乐路径集中在 `src/data/wedding.ts`。
+婚礼文案、姓名、日期、酒店、导航地址与音乐路径集中在 `src/data/wedding.ts`；照片墙选片、文案、位置和裁剪集中在 `src/data/memory-wall.ts`。
 
 ```text
 src/
   data/wedding.ts               婚礼配置、文案和素材路径
   sections/GreetingSequence.tsx 滚动问候
-  sections/DayOne.tsx           真实婚纱照、第一天信息、6 张照片留位
+  sections/DayOne.tsx           真实婚纱照与第一天信息
   sections/WorldTransition.tsx  真实照片 → 逐级像素化 → 星露谷场景
   sections/DayTwo.tsx           第二天主图、日程和可点选的活动地图
   sections/Ending.tsx           像素夕阳和结尾
+  sections/MemoryWall.tsx       已确认的 11 张合照，秋日像素留言板
   sections/InvitationSummary.tsx 最后一页的双日时间、地点与安排汇总
   components/DayInfo.tsx        地图、复制地址、日程与场地照片
   components/VenueActions.tsx   正文与汇总页共用的地图、复制地址操作
@@ -69,27 +70,23 @@ scripts/
 
 Day 2 使用 `#F1E7D4` 米杏底与 `#584437` 正文，卡片和像素主图边缘保持米白，绿与木色连接两天；橙、金盏黄、浆果红、湖蓝只用于树木、游戏图标及摊位细节。设计比例目标为 Day 1：75% 中性 / 20% 绿 / 5% 暖色；Day 2：55% 中性 / 20% 绿与木 / 20% 橙黄 / 5% 浆果与蓝（不对原始照片做像素面积限制）。禁止大面积纯红、酒红或橙红。
 
-活动地图沿用原布局：咖啡木色、冰淇淋与花束浆果色、钓鱼湖蓝、网球苔绿、种子金盏黄等，统一米白标签，通过像素边线和选中勾区分。转场采用白绿 → golden hour → 秋日米杏的纵向渐变，结尾以金色天空与绿色山丘收束。照片区保留大图、双图、横图的 editorial 排版。
+活动地图沿用原布局：咖啡木色、冰淇淋与花束浆果色、钓鱼湖蓝、网球苔绿、种子金盏黄等，统一米白标签，通过像素边线和选中勾区分。转场采用白绿 → golden hour → 秋日米杏的纵向渐变；夕阳结尾之后接紧凑照片墙，婚礼信息汇总仍是最后一页。
 
 ## 补充照片
 
 原始 ZIP 和 PNG 不会被修改。已有婚纱照生成 640、960、1440 三档 WebP，质量设为 86；手机通过 `srcset` 选择适合的尺寸。星露谷图裁出花架、新人与小动物，保留原图的完整网页副本。
 
-新增照片放到 `public/assets/photos/`，然后在配置里填写：
+原来的六个空白照片框已移除。正式照片墙使用用户确认的 01、02、03、04、15、16、18、19、22、24、25，共 11 张，放在 `#ending` 与 `#info-summary` 之间，锚点为 `#memory-wall`，继续播放结尾音乐。
 
-```ts
-story: {
-  // 保留已有标题和文案；按顺序填写至少 6 个位置。
-  photos: [
-    { src: '/assets/photos/story-01.webp', alt: '两个人在草地上散步', caption: '' },
-    // ...
-  ],
-}
-```
+保留已确认的图钉、胶带、白边、轻微旋转和星露谷点缀；文案为“下一张，和你一起。把这次相聚，也留在照片里。”。390px 手机上墙体约高 280px。16、18 号通过 CSS 做 4:5 展示裁剪，其他照片保留原比例。墙体样式限定在 `MemoryWall.scss` 的组件作用域内，不影响活动地图。
 
-目前六个 `src` 都为空，页面保留六个空白画框。可继续增加；现有前六张采用大图、双图、横图、双图的节奏。
+`public/assets/photos/wall/` 只包含获准发布的 11 张 480 像素长边 WebP，合计约 342 KB，移除 EXIF / GPS，滚动接近结尾时才加载。其余 14 张候选、所有 JPEG 大图和选片预览放在被 Git 忽略的 `photo-review/`，不上传。原 ZIP 仍不动。
+
+本地工作流程：`node scripts/prepare-wall-photos.mjs` 生成 25 张本地候选；`node scripts/preview-photo-wall.mjs` 生成独立样稿；确认后执行 `node scripts/publish-wall-assets.mjs`，只复制上述 11 张到正式素材目录。正式布局以后以 `src/data/memory-wall.ts` 为准。
 
 两处场地已接入用户生成的 `day1_place.png` 与 `day2_place.png`。场地图紧跟标题，图下注明“婚礼场地”和具体草坪名，然后呈现日期、酒店和日程；移除信息卡的“现场音乐”字段，不设大图链接。执行 `node scripts/prepare-venues.mjs` 生成 640、960、1440 宽的 WebP（质量 88），完整保留 4:3 构图，手机通过 srcset 按需加载。各档约 124–143 KB、260–282 KB、497–505 KB，原始 PNG 不覆盖且不提交到仓库。配置支持 src、srcSet、width、height；有实际场地照片后可替换。`pixel.bride`、`pixel.groom`、`pixel.couple` 继续预留定制像素人物。
+
+本次 Day 2 以确认的附件重新生成网页图，源文件 SHA-256 前缀为 `ed78cf45`，地址改为 `day2-place-ed78cf45-{640,960,1440}.webp`，避免浏览器复用旧 URL 缓存。只更新 Day 2 时运行 `node scripts/prepare-venues.mjs --day=2`；脚本按源文件内容生成版本号，替换原图后须同步配置中的文件名前缀。
 
 建议新照片先输出宽 960–1440 的 WebP，质量 82–90，以人脸与婚纱细节为准，不需要把原片直接放入 `public/`。现有照片因为背景简单，1440 宽的版本仅约 68 KB；不是对 10 MB 原图进行覆盖压缩。
 
@@ -157,11 +154,12 @@ PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-summary.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autoplay.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-polish.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autumn.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-memory-wall.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。
 
-覆盖 320×568、375×812、390×844、430×932 与桌面 1440×1000，检查横向溢出、场地图与花体、资源错误、照片留位、地图链接、活动点选保存、五段音乐播放、关闭/恢复与减少动态效果。原有手动开启场景通过 `muted-session.mjs` 设置宾客已关闭音乐的会话；独立 autoplay 检查覆盖真正允许自动播放、模拟拦截后手势解锁、启动中关闭及刷新后的关闭偏好。其他音频检查覆盖失败重试和快速滚动时的音频竞争。截图与报告输出到 `test-results/`。
+覆盖 320×568、375×812、390×844、430×932 与桌面 1440×1000，检查横向溢出、场地图与花体、资源错误、11 张选片、照片墙大小与加载时机、地图链接、活动点选保存、五段音乐播放、关闭/恢复与减少动态效果。`verify-memory-wall.mjs` 另检查三档 Day 2 图片与当前原图逐字节相符、只发布确认照片、无 EXIF 元数据。原有手动开启场景通过 `muted-session.mjs` 设置宾客已关闭音乐的会话；独立 autoplay 检查覆盖真正允许自动播放、模拟拦截后手势解锁、启动中关闭及刷新后的关闭偏好。其他音频检查覆盖失败重试和快速滚动时的音频竞争。截图与报告输出到 `test-results/`。
 
 浏览器模拟不等于真实微信。正式发送前仍需在 iPhone 微信、Safari 和 Android 微信中检查：首次开启音乐、切到后台再返回、网络较慢时的播放、地图能否正常打开。局域网 HTTP 上会使用复制地址的兼容方式；正式部署使用 HTTPS。
 
@@ -191,7 +189,7 @@ CI 直接使用 `public/` 中已经优化好的素材，不读取本地原片，
 
 ## 仍待补充
 
-- 至少 6 张故事照片；两天已有场地示意图，可再补充实际照片。
+- 照片墙已使用确认的 11 张合照；两天已有场地示意图，可再补充实际场地照片。
 - 补充遂昌源口大草坪的导航链接；两天日程时间已齐。
 - 如需更像本人的像素形象，再替换定制像素新人；当前使用提供的主图人物。
 - 手机逐屏审阅后，调整开场滚动长度、转场节奏和照片构图。

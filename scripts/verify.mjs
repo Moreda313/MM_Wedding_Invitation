@@ -90,12 +90,12 @@ try {
     for (const selector of [
       "#day1",
       "#day1-info",
-      ".photo-story",
       ".world-transition",
       "#day2",
       "#day2-info",
       "#party",
       "#ending",
+      "#memory-wall",
       "#info-summary",
     ]) {
       await page
@@ -153,7 +153,8 @@ try {
       0,
       "Scrolling without consent must never fetch audio",
     );
-    assert.equal(await page.locator(".story-photo").count(), 6);
+    assert.equal(await page.locator(".story-photo").count(), 0);
+    assert.equal(await page.locator("#memory-wall .snapshot").count(), 11);
     assert.equal(await page.locator(".venue-placeholder").count(), 0);
     assert.equal(await page.locator(".venue-photo img").count(), 2);
     assert.equal(

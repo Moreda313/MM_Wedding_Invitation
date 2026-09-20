@@ -84,8 +84,8 @@ export const wedding = {
       },
     ],
     venuePhoto: {
-      src: "/assets/photos/day2-place-960.webp",
-      srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day2-place-${width}.webp`, width })),
+      src: "/assets/photos/day2-place-ed78cf45-960.webp",
+      srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day2-place-ed78cf45-${width}.webp`, width })),
       width: 1440, height: 1080,
       alt: "遂昌婚礼场地示意图：秋日星露谷风格的花拱、木椅、花草和山景",
       caption: "遂昌源口大草坪",
@@ -94,14 +94,6 @@ export const wedding = {
   hero: {
     together: "邀请你来参加我们的婚礼。",
     photoAlt: "毛凌涛与陈婉梦牵手微笑，新娘挥手，新郎举起捧花",
-  },
-  story: {
-    title: "我们的照片",
-    photos: Array.from({ length: 6 }, (_, i) => ({
-      src: "",
-      alt: `我们的第 ${i + 1} 个瞬间`,
-      caption: "",
-    })) as Photo[],
   },
   transition: {
     surprise: "One more thing…",

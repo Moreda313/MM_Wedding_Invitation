@@ -55,7 +55,7 @@ for (const engine of [chromium, webkit]) {
     assert.ok(!(await page.locator(".music-control").innerText()).includes("音乐已开"));
     await page.locator(".first-greeting h1").tap();
     await waitStatus(page, "playing");
-    for (const [selector, track] of [[".world-transition", "transition"], ["#day2", "day2"], ["#party", "party"], ["#ending", "ending"], ["#info-summary", "ending"]]) {
+    for (const [selector, track] of [[".world-transition", "transition"], ["#day2", "day2"], ["#party", "party"], ["#ending", "ending"], ["#memory-wall", "ending"], ["#info-summary", "ending"]]) {
       await page.locator(selector).evaluate((e) => e.scrollIntoView({ behavior: "instant" }));
       await page.waitForFunction((track) => {
         const app = document.querySelector(".invitation");

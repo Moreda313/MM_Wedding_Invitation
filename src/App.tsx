@@ -11,6 +11,7 @@ import { DayOne } from "./sections/DayOne";
 import { WorldTransition } from "./sections/WorldTransition";
 import { DayTwo } from "./sections/DayTwo";
 import { Ending } from "./sections/Ending";
+import { MemoryWall } from "./sections/MemoryWall";
 import { InvitationSummary } from "./sections/InvitationSummary";
 
 export default function App() {
@@ -60,6 +61,7 @@ export default function App() {
         <WorldTransition />
         <DayTwo />
         <Ending />
+        <MemoryWall />
         <InvitationSummary />
       </main>
       <nav

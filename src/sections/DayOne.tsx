@@ -37,46 +37,6 @@ export function DayOne() {
         </div>
       </section>
       <DayInfo day={wedding.day1} />
-      <PhotoStory />
     </div>
-  );
-}
-
-function PhotoStory() {
-  return (
-    <section
-      className="photo-story section-pad"
-      aria-label={wedding.story.title}
-    >
-      <div data-reveal>
-        <h2 className="preserve">{wedding.story.title}</h2>
-      </div>
-      <div className="story-grid">
-        {wedding.story.photos.map((photo, index) => (
-          <figure
-            className={`story-photo story-photo-${index + 1} ${photo.src ? "filled" : "empty"}`}
-            key={index}
-            data-reveal
-          >
-            {photo.src ? (
-              <img
-                src={assetUrl(photo.src)}
-                alt={photo.alt}
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div className="photo-space" aria-label={`${photo.alt}，待补充`}>
-                <span>0{index + 1}</span>
-                <i />
-              </div>
-            )}
-            <figcaption>
-              {photo.caption}
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
   );
 }
