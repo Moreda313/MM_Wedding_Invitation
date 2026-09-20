@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -90,7 +90,7 @@ if (process.argv.includes("--wiki") || process.argv.includes("--wiki-only")) {
     "White_Chicken",
     "Junimo_Icon",
   ];
-  const sources = [];
+  const sources = JSON.parse(await readFile("public/assets/pixel/sources.json", "utf8").catch(() => "[]"));
   for (const name of names) {
     try {
       const page = ["White_Chicken", "Junimo_Icon"].includes(name)
@@ -112,13 +112,16 @@ if (process.argv.includes("--wiki") || process.argv.includes("--wiki-only")) {
       const bytes = Buffer.from(await response.arrayBuffer());
       await sharp(bytes).metadata();
       await writeFile(`public/assets/pixel/${name}.png`, bytes);
-      sources.push({
+      const source = {
         name,
         page,
         url,
         copyright:
           "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki.",
-      });
+      };
+      const index = sources.findIndex(item => item.name === name);
+      if (index < 0) sources.push(source);
+      else sources[index] = source;
       console.log(`Downloaded ${name}: ${bytes.length} bytes`);
     } catch (error) {
       console.warn(`Could not download ${name}: ${error.message}`);

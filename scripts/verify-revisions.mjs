@@ -190,7 +190,7 @@ try {
     );
     assert.match(
       await page.locator("#day1-info .schedule").innerText(),
-      /下午\s+草坪婚礼\s+晚上\s+晚宴/,
+      /下午\s+草坪婚礼\s+雷迪森酒店草坪\s+晚上\s+晚宴/,
     );
     assert.match(
       await page.locator("#day2-info .schedule").innerText(),
@@ -198,8 +198,9 @@ try {
     );
     assert.doesNotMatch(
       await page.locator("#day2-info .schedule").innerText(),
-      /12:00|14:00|暂定/,
+      /12:00|暂定/,
     );
+    assert.match(await page.locator("#day2-info .schedule").innerText(), /14:00\s+草坪婚礼与派对\s+遂昌源口大草坪/);
     assert.ok(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

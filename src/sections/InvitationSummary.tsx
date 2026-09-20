@@ -21,8 +21,9 @@ export function InvitationSummary() {
                 </h3>
                 <p>{index === 0 ? "第一天" : "第二天"} · {day.city}</p>
               </div>
-              <p className="summary-venue">{day.venue}</p>
+              <p className="summary-venue"><span>{day.venueLabel} · </span>{day.venue}</p>
               <p className="address">{day.address}</p>
+              <p className="summary-lawn">草坪仪式 · {day.ceremonyVenue}</p>
               <dl className="summary-schedule">
                 {day.schedule.map((item) => (
                   <div key={item.title}>

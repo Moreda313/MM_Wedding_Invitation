@@ -1,4 +1,5 @@
 import { wedding } from "../data/wedding";
+import { PixelIcon } from "../components/PixelIcon";
 import { useReducedMotion, useScrollProgress } from "../hooks/useScroll";
 
 export function GreetingSequence({
@@ -24,14 +25,21 @@ export function GreetingSequence({
           return (
             <div
               key={index}
-              className={`greeting-frame ${index === 0 ? "first-greeting" : ""} ${index === current ? "is-current" : index < current ? "is-before" : ""}`}
+              className={`greeting-frame ${index === 0 ? "first-greeting" : ""} ${index === wedding.greeting.length - 1 ? "announcement-greeting" : ""} ${index === current ? "is-current" : index < current ? "is-before" : ""}`}
               aria-hidden={!reduced && index !== current}
             >
               <h1>
                 {greeting.lines.map((line, lineIndex) => (
-                  <span key={lineIndex}>{line}</span>
+                  <span key={lineIndex}>{line}{index === wedding.greeting.length - 1 && lineIndex === 1 && (
+                    <span className="celebration-emoji" aria-hidden="true">🎉</span>
+                  )}</span>
                 ))}
               </h1>
+              {index === wedding.greeting.length - 1 && (
+                <div className="greeting-bouquet" aria-hidden="true">
+                  <span>✧</span><PixelIcon name="Bouquet" /><span>✧</span>
+                </div>
+              )}
               {greeting.note && (
                 <p className="greeting-note">{greeting.note}</p>
               )}

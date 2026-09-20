@@ -36,9 +36,10 @@ for (const engine of [chromium, webkit]) {
         assert.match(await page.locator(`#${id}-info .venue-full`).getAttribute("href"), /1440\.webp$/);
         await page.screenshot({ path: `test-results/${engine.name()}-${width}-${id}-venue.png` });
       }
-      assert.match(await page.locator("#day1-info .schedule").innerText(), /上午\s+接新娘\s+下午\s+草坪婚礼\s+晚上\s+晚宴/);
+      assert.match(await page.locator("#day1-info .schedule").innerText(), /上午\s+接新娘\s+下午\s+草坪婚礼\s+雷迪森酒店草坪\s+晚上\s+晚宴/);
       assert.match(await page.locator(".summary-day1 .summary-schedule").innerText(), /上午\s+接新娘/);
-      assert.equal(await page.locator(".transition-teaser .eyebrow").innerText(), "等等，似乎还差点什么？");
+      assert.equal(await page.locator(".transition-teaser .eyebrow").count(), 0);
+      assert.equal(await page.locator(".transition-teaser h2").innerText(), "One more thing…");
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       assert.deepEqual(errors, []);
       await page.close();

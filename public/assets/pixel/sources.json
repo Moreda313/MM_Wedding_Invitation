@@ -64,5 +64,53 @@
     "page": "https://zh.stardewvalleywiki.com/Stardew_Valley_Wiki",
     "url": "https://stardewvalleywiki.com/mediawiki/images/b/b3/Junimo_Icon.png",
     "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Maple_Fall",
+    "page": "https://stardewvalleywiki.com/Maple_Tree",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/3/3b/Maple_Stage_5.png",
+    "crop": {
+      "left": 200,
+      "top": 0,
+      "width": 96,
+      "height": 190
+    },
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Oak_Fall",
+    "page": "https://stardewvalleywiki.com/Oak_Tree",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/d/d3/Oak_Stage_5.png",
+    "crop": {
+      "left": 204,
+      "top": 0,
+      "width": 98,
+      "height": 188
+    },
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Stardrop",
+    "page": "https://stardewvalleywiki.com/Stardrop",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/a/a5/Stardrop.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Pumpkin",
+    "page": "https://stardewvalleywiki.com/Pumpkin",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/6/64/Pumpkin.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Cranberries",
+    "page": "https://stardewvalleywiki.com/Cranberries",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/6/6e/Cranberries.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Hazelnut",
+    "page": "https://stardewvalleywiki.com/Hazelnut",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/3/31/Hazelnut.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
   }
 ]

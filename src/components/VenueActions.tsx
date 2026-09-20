@@ -33,7 +33,7 @@ export function VenueActions({ day }: { day: WeddingDay }) {
       <div className="map-actions">
         <a href={day.mapUrl} target="_blank" rel="noreferrer"
           aria-label={`${wedding.ui.navigate}：${day.city} · ${day.venue}`}>
-          {wedding.ui.navigate}<span aria-hidden="true">↗</span>
+          {day.mapLabel}<span aria-hidden="true">↗</span>
         </a>
         <button onClick={copy} aria-label={`${wedding.ui.copy}：${day.venue}`}>
           {wedding.ui.copy}

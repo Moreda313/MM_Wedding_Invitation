@@ -86,14 +86,21 @@ function PartyPreview() {
       <div data-reveal>
         <p className="eyebrow">{wedding.party.eyebrow}</p>
         <h2 className="preserve">{wedding.party.title}</h2>
-        <p className="body-copy">{wedding.party.note}</p>
       </div>
       <div className="town-map" aria-label="婚礼活动地图" data-reveal>
         <div className="map-river" aria-hidden="true" />
         <div className="map-path" aria-hidden="true" />
-        <span className="map-tree tree-one" aria-hidden="true" />
-        <span className="map-tree tree-two" aria-hidden="true" />
-        <span className="map-tree tree-three" aria-hidden="true" />
+        <div className="map-autumn" aria-hidden="true">
+          <span className="map-tree tree-one"><PixelIcon name="Oak_Fall" /></span>
+          <span className="map-tree tree-two"><PixelIcon name="Maple_Fall" /></span>
+          <span className="map-tree tree-three"><PixelIcon name="Oak_Fall" /></span>
+          <span className="map-harvest harvest-pumpkin"><PixelIcon name="Pumpkin" /></span>
+          <span className="map-harvest harvest-berries"><PixelIcon name="Cranberries" /></span>
+          <span className="map-harvest harvest-nut"><PixelIcon name="Hazelnut" /></span>
+          <span className="map-harvest harvest-acorn"><PixelIcon name="Acorn" /></span>
+          <span className="map-harvest harvest-pumpkin-small"><PixelIcon name="Pumpkin" /></span>
+          {Array.from({ length: 9 }, (_, i) => <i key={i} className={`map-leaf leaf-${i + 1}`} />)}
+        </div>
         {wedding.party.activities.map((activity) => (
           <button
             key={activity.id}
@@ -114,9 +121,10 @@ function PartyPreview() {
           </button>
         ))}
       </div>
-      <p className="party-footnote">{wedding.party.footer}</p>
       <div className="seed-note" data-reveal>
-        <PixelIcon name="Mixed_Seeds" />
+        <div className="seed-icons" aria-hidden="true">
+          <PixelIcon name="Mixed_Seeds" /><span>✧</span><PixelIcon name="Stardrop" />
+        </div>
         <p>
           {wedding.ending.title.split("\n")[0]}
           <br />

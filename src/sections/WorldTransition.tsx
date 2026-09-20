@@ -28,7 +28,7 @@ export function WorldTransition() {
       className={`world-transition ${revealed ? "is-revealed" : ""}`}
       ref={ref}
       data-music="transition"
-      aria-label={wedding.transition.before}
+      aria-label={wedding.transition.surprise}
     >
       <div
         className="transition-sticky"
@@ -39,7 +39,6 @@ export function WorldTransition() {
         <div className="transition-wash" style={{ opacity: worldProgress }} />
         <div className="transition-stage">
           <div className="transition-teaser" aria-hidden={!reduced && revealed}>
-            <p className="eyebrow">{wedding.transition.before}</p>
             <h2>{wedding.transition.surprise}</h2>
           </div>
           <div className="transition-world" aria-hidden={!reduced && !revealed}>

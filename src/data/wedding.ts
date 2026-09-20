@@ -14,6 +14,9 @@ export type WeddingDay = {
   weekday: string;
   city: string;
   venue: string;
+  venueLabel: string;
+  ceremonyVenue: string;
+  mapLabel: string;
   address: string;
   mapUrl: string;
   note: string;
@@ -40,12 +43,15 @@ export const wedding = {
     weekday: "星期四",
     city: "建德",
     venue: "杭州新安雷迪森酒店",
+    venueLabel: "晚宴地点",
+    ceremonyVenue: "雷迪森酒店草坪",
+    mapLabel: "打开地图",
     address: "建德市新安江街道南山路1号",
     mapUrl: "https://surl.amap.com/mzxjIZkp9A1",
     note: "想请你见证我们的婚礼，\n也想借这个机会，好好聚一聚。",
     schedule: [
       { time: "上午", title: "接新娘" },
-      { time: "下午", title: "草坪婚礼" },
+      { time: "下午", title: "草坪婚礼", note: "雷迪森酒店草坪" },
       { time: "晚上", title: "晚宴" },
     ],
     venuePhoto: {
@@ -54,7 +60,7 @@ export const wedding = {
       full: "/assets/photos/day1-place-1440.webp",
       width: 1440, height: 1080,
       alt: "建德婚礼场地示意图：白绿花园中的仪式区、观礼席、甜品区和迎宾区",
-      caption: "建德 · 场地示意图",
+      caption: "雷迪森酒店草坪",
     },
   } satisfies WeddingDay,
   day2: {
@@ -65,15 +71,18 @@ export const wedding = {
     weekday: "星期五",
     city: "遂昌",
     venue: "华侨东方大酒店",
+    venueLabel: "午宴地点",
+    ceremonyVenue: "遂昌源口大草坪",
+    mapLabel: "午宴酒店地图",
     address: "遂昌县牡丹亭中路8号（近太和路）",
     mapUrl: "https://surl.amap.com/dCdJgKy170lF",
     note: "来参加婚礼，\n也来和许久没见的朋友聚一聚。",
     schedule: [
       { time: "11:00", title: "午宴开始", note: "午宴后前往草坪" },
       {
-        time: "下午",
+        time: "14:00",
         title: "草坪婚礼与派对",
-        note: "仪式之后，一起玩",
+        note: "遂昌源口大草坪",
       },
     ],
     venuePhoto: {
@@ -82,7 +91,7 @@ export const wedding = {
       full: "/assets/photos/day2-place-1440.webp",
       width: 1440, height: 1080,
       alt: "遂昌婚礼场地示意图：秋日星露谷风格的花拱、木椅、花草和山景",
-      caption: "遂昌 · 场地示意图",
+      caption: "遂昌源口大草坪",
     },
   } satisfies WeddingDay,
   hero: {
@@ -98,7 +107,6 @@ export const wedding = {
     })) as Photo[],
   },
   transition: {
-    before: "等等，似乎还差点什么？",
     surprise: "One more thing…",
     title: ["人生，", "也可以是星露谷。"],
     after: "把日子，过成喜欢的游戏。",
@@ -120,11 +128,9 @@ export const wedding = {
   },
   party: {
     eyebrow: "小镇活动一览",
-    title: "想玩什么，\n随你挑。",
-    note: "点选感兴趣的活动，给自己做个标记。",
+    title: "和你们一起，\n待一个下午。",
     selected: "已标记",
     unselected: "标记想玩",
-    footer: "玩几项都好，不用全部打卡。",
     activities: [
       { id: "coffee", name: "喝杯咖啡", icon: "Coffee", x: 20, y: 22 },
       { id: "drink", name: "喝一杯", icon: "Beer", x: 75, y: 18 },
@@ -144,14 +150,14 @@ export const wedding = {
     ],
   },
   ending: {
-    title: "带一份种子回家，\n种出来了，记得发照片给我们。",
+    title: "带一份种子回家，\n让美好慢慢生长。",
     english: "See you there.",
     note: "到时候见！",
     top: "再看一遍",
   },
   summary: {
     title: "婚礼信息",
-    note: "接亲、下午仪式及第一天晚宴的具体钟点待补充。",
+    note: "第一天接亲、草坪仪式及晚宴的具体钟点待补充。",
     enter: "查看时间与地点",
   },
   ui: {
@@ -164,7 +170,6 @@ export const wedding = {
     date: "婚礼日期",
     location: "婚礼地点",
     schedule: "当天安排",
-    live: "现场音乐",
     musicOn: "音乐已开",
     musicOff: "开启音乐",
     musicLoading: "音乐加载中",

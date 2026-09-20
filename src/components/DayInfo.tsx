@@ -20,37 +20,6 @@ export function DayInfo({
           {day.label} <span> / </span> {day.city}
         </p>
         <h2>{day.title}</h2>
-        <p className="body-copy preserve">{day.note}</p>
-      </div>
-      <div className="invitation-card" data-reveal>
-        <div className="date-block">
-          <span className="small-label">{wedding.ui.date}</span>
-          <p className="big-date">{day.date.slice(5).replace(".", " / ")}</p>
-          <span className="date-year">
-            2026 <span>·</span> {day.weekday}
-          </span>
-        </div>
-        <div className="venue-block">
-          <span className="small-label">{wedding.ui.location}</span>
-          <h3>{day.venue}</h3>
-          <p className="address">{day.address}</p>
-          <VenueActions day={day} />
-        </div>
-        <div className="schedule">
-          <span className="small-label">{wedding.ui.schedule}</span>
-          {day.schedule.map((item) => (
-            <div className="schedule-row" key={item.title}>
-              <span>{item.time}</span>
-              <div>
-                <strong>{item.title}</strong>
-                <p>{item.note}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="live-note">
-          <span aria-hidden="true">♫</span> {wedding.ui.live}
-        </p>
       </div>
       <figure
         className={`venue-photo ${day.venuePhoto.src ? "has-photo" : ""}`}
@@ -78,15 +47,43 @@ export function DayInfo({
         )}
         <figcaption>
           <span>{wedding.ui.venue}</span>
-          {day.venuePhoto.caption}
+          {day.ceremonyVenue}
         </figcaption>
         {day.venuePhoto.full && (
           <a className="venue-full text-link" href={assetUrl(day.venuePhoto.full)}
-            target="_blank" rel="noreferrer" aria-label={`${day.city}场地示意图：${wedding.ui.viewVenue}`}>
+            target="_blank" rel="noreferrer" aria-label={`${day.ceremonyVenue}：${wedding.ui.viewVenue}`}>
             {wedding.ui.viewVenue}<span aria-hidden="true">↗</span>
           </a>
         )}
       </figure>
+      <p className="body-copy preserve venue-invitation" data-reveal>{day.note}</p>
+      <div className="invitation-card" data-reveal>
+        <div className="date-block">
+          <span className="small-label">{wedding.ui.date}</span>
+          <p className="big-date">{day.date.slice(5).replace(".", " / ")}</p>
+          <span className="date-year">
+            2026 <span>·</span> {day.weekday}
+          </span>
+        </div>
+        <div className="venue-block">
+          <span className="small-label">{day.venueLabel}</span>
+          <h3>{day.venue}</h3>
+          <p className="address">{day.address}</p>
+          <VenueActions day={day} />
+        </div>
+        <div className="schedule">
+          <span className="small-label">{wedding.ui.schedule}</span>
+          {day.schedule.map((item) => (
+            <div className="schedule-row" key={item.title}>
+              <span>{item.time}</span>
+              <div>
+                <strong>{item.title}</strong>
+                {item.note && <p>{item.note}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
