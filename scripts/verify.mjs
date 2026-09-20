@@ -94,8 +94,8 @@ try {
       "#day2",
       "#day2-info",
       "#party",
-      "#ending",
       "#memory-wall",
+      "#ending",
       "#info-summary",
     ]) {
       await page

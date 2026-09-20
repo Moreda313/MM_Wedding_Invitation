@@ -133,6 +133,53 @@ export function useOpeningStage(frameCount: number) {
   return stage;
 }
 
+// Let the invitation fill the screen while reading down; a small upward scroll
+// brings shortcuts back. Keep them available for keyboard and reduced-motion users.
+export function useReadingNavigation(available: boolean) {
+  const reduced = useReducedMotion();
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (!available) return;
+    let frame = 0;
+    let previous = Math.max(0, scrollY);
+    let travel = 0;
+    setVisible(true);
+    const reveal = () => { travel = 0; previous = Math.max(0, scrollY); setVisible(true); };
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const current = Math.max(0, Math.min(scrollY, document.documentElement.scrollHeight - innerHeight));
+        const delta = current - previous;
+        previous = current;
+        const summary = document.getElementById("info-summary")?.getBoundingClientRect();
+        if (reduced || (summary && summary.top < innerHeight * .85 && summary.bottom > 80)
+          || document.querySelector(".day-nav a:focus-visible")) {
+          travel = 0;
+          setVisible(true);
+          return;
+        }
+        if (delta === 0) return;
+        travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+        if (travel > 32) setVisible(false);
+        if (travel < -16) setVisible(true);
+      });
+    };
+    const keyboard = (event: KeyboardEvent) => { if (event.key === "Tab") reveal(); };
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", reveal);
+    addEventListener("hashchange", reveal);
+    addEventListener("keydown", keyboard);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener("scroll", update);
+      removeEventListener("resize", reveal);
+      removeEventListener("hashchange", reveal);
+      removeEventListener("keydown", keyboard);
+    };
+  }, [available, reduced]);
+  return available && (reduced || visible);
+}
+
 export function useReveal() {
   useEffect(() => {
     const observer = new IntersectionObserver(

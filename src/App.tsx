@@ -1,6 +1,7 @@
 import { wedding } from "./data/wedding";
 import {
   useInitialAnchor,
+  useReadingNavigation,
   useMusicScene,
   useOpeningStage,
   useReveal,
@@ -20,6 +21,7 @@ export default function App() {
   const openingStage = useOpeningStage(wedding.greeting.length);
   const showMusic = true;
   const showNavigation = openingStage === "invitation";
+  const showDayNavigation = useReadingNavigation(showNavigation);
   const { status, track, enabled, toggle, enableMusic } = useMusic(scene);
   useReveal();
   const autumn = scene !== "day1";
@@ -60,16 +62,16 @@ export default function App() {
         <DayOne />
         <WorldTransition />
         <DayTwo />
-        <Ending />
         <MemoryWall />
+        <Ending />
         <InvitationSummary />
       </main>
       <nav
         className="day-nav chrome-piece"
         aria-label={wedding.ui.itinerary}
-        data-visible={showNavigation}
-        aria-hidden={!showNavigation}
-        inert={!showNavigation}
+        data-visible={showDayNavigation}
+        aria-hidden={!showDayNavigation}
+        inert={!showDayNavigation}
       >
         <a href="#day1-info">{wedding.ui.jumpDay1}</a>
         <span />

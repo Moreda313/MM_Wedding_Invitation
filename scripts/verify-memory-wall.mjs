@@ -34,7 +34,7 @@ for (const engine of [chromium, webkit]) {
       assert.equal(wallRequests.length, 0, "Wall photos should load near the ending, not the opening");
       assert.equal(await page.locator(".photo-story, .photo-space").count(), 0);
       assert.deepEqual(await page.locator(".snapshot").evaluateAll(items => items.map(e => e.dataset.photo)), ids);
-      assert.ok(await page.locator("#memory-wall").evaluate(e => e.previousElementSibling.id === "ending" && e.nextElementSibling.id === "info-summary"));
+      assert.ok(await page.locator("#memory-wall").evaluate(e => e.previousElementSibling.classList.contains("day-two") && e.nextElementSibling.id === "ending"));
       assert.equal(await page.locator("main > :last-child").getAttribute("id"), "info-summary");
       await page.locator("#day2-info .venue-photo").evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));
       await page.waitForFunction(() => { const i = document.querySelector("#day2-info .venue-photo img"); return i.complete && i.naturalWidth > 0; });
@@ -47,7 +47,7 @@ for (const engine of [chromium, webkit]) {
       await page.waitForFunction(() => [...document.querySelectorAll("#memory-wall img")].every(i => i.complete && i.naturalWidth > 0));
       await page.waitForTimeout(300);
       assert.equal(wallRequests.length, 11);
-      assert.equal(await page.locator(".invitation").getAttribute("data-scene"), "ending");
+      assert.equal(await page.locator(".invitation").getAttribute("data-scene"), "party");
       assert.equal(await page.locator("#wall-title").innerText(), "下一张，和你一起。");
       assert.equal(await page.locator(".wall-message").innerText(), "把这次相聚，也留在照片里。");
       const wall = await page.locator(".wall-board").boundingBox();
@@ -58,7 +58,7 @@ for (const engine of [chromium, webkit]) {
       await page.screenshot({ path: `test-results/${engine.name()}-${width}-integrated-wall.png` });
       await page.locator(".memory-wall").screenshot({ path: `test-results/${engine.name()}-${width}-wall-detail.png` });
       await page.goto(`${url}#memory-wall`, { waitUntil: "networkidle" });
-      await page.waitForFunction(() => document.querySelector(".invitation").dataset.scene === "ending");
+      await page.waitForFunction(() => document.querySelector(".invitation").dataset.scene === "party");
       assert.deepEqual(errors, []);
       console.log(`${engine.name()} ${width}: approved wall, eleven lazy photos, last-page summary and current venue passed`);
       await page.close();

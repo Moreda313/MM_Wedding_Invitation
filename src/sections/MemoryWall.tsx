@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { wedding } from "../data/wedding";
 import { memoryWall } from "../data/memory-wall";
 import { assetUrl } from "../lib/assetUrl";
 import "./MemoryWall.scss";
@@ -10,10 +9,9 @@ function Decoration({ name, className }: { name: string; className: string }) {
 
 export function MemoryWall() {
   return (
-    <section className="memory-wall-section" id="memory-wall" data-music="ending" aria-labelledby="wall-title">
+    <section className="memory-wall-section" id="memory-wall" data-music="party" aria-labelledby="wall-title">
       <div className="memory-wall">
         <header className="wall-heading">
-          <p className="eyebrow">{wedding.couple.groom}<span>&</span>{wedding.couple.bride}</p>
           <h2 id="wall-title">{memoryWall.title}</h2>
           <p className="wall-message">{memoryWall.note}</p>
         </header>
@@ -44,13 +42,14 @@ export function MemoryWall() {
             </div>
           </div>
           <div className="edge-decor" aria-hidden="true">
+            <span className="wall-grass grass-left" /><span className="wall-grass grass-right" />
+            <Decoration name="Maple_Fall" className="autumn-maple" />
             <Decoration name="Oak_Fall" className="autumn-tree" />
             <Decoration name="Junimo_Icon" className="little-junimo" />
             <Decoration name="Pumpkin" className="little-pumpkin" />
             <Decoration name="Acorn" className="little-acorn" />
           </div>
         </div>
-        <div className="wall-tail" aria-hidden="true"><span /><i>♡</i><span /></div>
       </div>
     </section>
   );

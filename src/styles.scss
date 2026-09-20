@@ -466,8 +466,8 @@ p {
   letter-spacing: 0.3em;
 }
 .day-info {
-  padding-top: 92px;
-  padding-bottom: 50px;
+  padding-top: 64px;
+  padding-bottom: 40px;
 }
 .info-heading h2 {
   margin-top: 18px;
@@ -476,32 +476,38 @@ p {
   max-width: 430px;
 }
 .invitation-card {
-  margin-top: 48px;
+  margin-top: 32px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 28px 0 16px;
+  padding: 22px 0 12px;
 }
 .date-block {
-  padding-bottom: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 18px;
+  padding-bottom: 20px;
 }
+.date-block .small-label { grid-column: 1 / -1; }
 .big-date {
   font-family: Georgia, serif;
-  font-size: 60px;
-  line-height: 1.5;
+  font-size: 48px;
+  line-height: 1.4;
   letter-spacing: -0.05em;
   font-weight: 400;
 }
 .date-year {
   font-size: 12px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   color: #69725f;
+  white-space: nowrap;
 }
 .date-year span {
-  padding: 0 8px;
+  padding: 0 3px;
 }
 .venue-block {
   border-top: 1px solid var(--line);
-  padding-top: 24px;
+  padding-top: 18px;
 }
 .venue-block h3 {
   font-family: var(--serif);
@@ -521,7 +527,7 @@ p {
   display: flex;
   gap: 23px;
   align-items: center;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 .map-actions a {
   display: flex;
@@ -548,18 +554,18 @@ p {
 }
 .copy-status {
   font-size: 11px;
-  min-height: 24px;
-  margin-top: 8px;
+  min-height: 20px;
+  margin-top: 4px;
   color: #62744e;
 }
 .schedule {
-  padding: 16px 0 4px;
+  padding: 12px 0 4px;
 }
 .schedule-row {
   display: grid;
   grid-template-columns: 104px minmax(0, 1fr);
   gap: 10px;
-  padding: 17px 0;
+  padding: 13px 0;
 }
 .schedule-row > span {
   font-family: Georgia, "PingFang SC", serif;
@@ -577,10 +583,10 @@ p {
   margin-top: 3px;
 }
 .venue-photo {
-  margin-top: 32px;
+  margin-top: 24px;
 }
-.venue-invitation { margin-top: 26px; }
-.venue-invitation + .invitation-card { margin-top: 32px; }
+.venue-invitation { margin-top: 20px; }
+.venue-invitation + .invitation-card { margin-top: 24px; }
 .venue-placeholder {
   height: 165px;
   display: flex;
@@ -621,17 +627,17 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 14px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
-  color: #8a907c;
-  margin-top: 11px;
+  color: #6d7766;
+  margin-top: 9px;
 }
 .venue-photo figcaption > span {
   flex-shrink: 0;
 }
 .world-transition {
-  height: 260vh;
-  height: 260svh;
+  height: 200vh;
+  height: 200svh;
   position: relative;
   background: var(--paper);
 }
@@ -837,8 +843,8 @@ p {
 }
 .day-two-hero {
   text-align: center;
-  padding-top: 94px;
-  padding-bottom: 60px;
+  padding-top: 72px;
+  padding-bottom: 40px;
 }
 .pixel-eyebrow {
   color: var(--autumn-olive);
@@ -850,9 +856,9 @@ p {
   align-items: center;
   justify-content: center;
   gap: 13px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.12em;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 .little-weather .pixel-icon {
   width: 24px;
@@ -866,7 +872,7 @@ p {
 }
 .pixel-scene {
   position: relative;
-  margin: 36px -8px 0;
+  margin: 28px -8px 0;
   padding: 5px;
   background: var(--ivory);
   box-shadow:
@@ -893,10 +899,10 @@ p {
   color: var(--autumn-ink);
 }
 .day-two-hero .body-copy {
-  margin-top: 32px;
+  margin-top: 24px;
 }
 .autumn-info {
-  padding-top: 35px;
+  padding-top: 24px;
 }
 .autumn-info h2 {
   font-size: 29px;
@@ -904,7 +910,7 @@ p {
 .autumn-info .invitation-card {
   background: var(--ivory);
   border: 1px solid var(--line);
-  padding: 25px 22px 17px;
+  padding: 22px 18px 12px;
   position: relative;
   box-shadow: 4px 4px 0 #6f7c4e12;
 }
@@ -961,8 +967,8 @@ p {
   flex-shrink: 0;
 }
 .party-preview {
-  padding-top: 64px;
-  padding-bottom: 72px;
+  padding-top: 40px;
+  padding-bottom: 28px;
 }
 .party-preview h2 {
   margin-top: 17px;
@@ -973,7 +979,7 @@ p {
 .town-map {
   position: relative;
   height: 600px;
-  margin: 35px -10px 0;
+  margin: 28px -10px 0;
   overflow: hidden;
   border: 5px solid var(--ivory);
   outline: 2px solid var(--autumn-olive);
@@ -1150,6 +1156,7 @@ p {
 .map-stop[data-activity="lucky"] {
   --stall: var(--marigold);
 }
+.map-stop[data-activity="music"] { --stall: var(--autumn-olive); }
 .map-icon {
   display: block;
   position: relative;
@@ -1166,8 +1173,8 @@ p {
   display: block;
   background: var(--ivory);
   border: 1px solid var(--stall);
-  padding: 3px 5px;
-  font-size: 10px;
+  padding: 4px 6px;
+  font-size: 12px;
   white-space: nowrap;
   color: var(--autumn-ink);
   box-shadow: 2px 2px 0 var(--stall);
@@ -1220,7 +1227,7 @@ p {
   max-width: none;
   position: relative;
   overflow: hidden;
-  min-height: 850px;
+  min-height: 760px;
   background: linear-gradient(
     var(--autumn-bg) 0%,
     #e8d5af 30%,
@@ -1228,8 +1235,8 @@ p {
     #81928d 100%
   );
   text-align: center;
-  padding-top: 95px;
-  padding-bottom: 135px;
+  padding-top: 64px;
+  padding-bottom: 112px;
   color: var(--autumn-ink);
 }
 .ending-content {
@@ -1305,10 +1312,10 @@ p {
   transform: scaleX(-1);
 }
 .ending-picture {
-  width: 210px;
-  height: 185px;
+  width: 184px;
+  height: 196px;
   overflow: hidden;
-  margin: 50px auto 30px;
+  margin: 30px auto 28px;
   border: 5px solid var(--ivory);
   outline: 2px solid var(--autumn-olive);
   box-shadow: 6px 6px 0 #52664e25;
@@ -1317,7 +1324,9 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 70%;
+  object-position: 50% 65%;
+  transform: scale(1.22);
+  transform-origin: 50% 65%;
   image-rendering: pixelated;
 }
 .ending-english {
@@ -1360,15 +1369,19 @@ p {
   height: 27px;
 }
 .ending .text-link {
-  color: #f8efde;
-  font-size: 11px;
+  color: var(--garden-green);
+  background: #f7f5efed;
+  border: 1px solid #52664e30;
+  padding: 10px 18px;
+  min-height: 44px;
+  font-size: 12px;
 }
 .invitation-summary {
   background: var(--ivory);
   color: var(--ink);
   /* This final sheet includes its own header inset; align it with the viewport. */
   scroll-margin-top: -80px;
-  padding: 82px 22px calc(85px + env(safe-area-inset-bottom));
+  padding: 72px 22px calc(85px + env(safe-area-inset-bottom));
   min-height: 100svh;
 }
 .summary-inner {
@@ -1497,8 +1510,9 @@ p {
     padding-right: 65px;
   }
   .day-info {
-    padding-top: 110px;
+    padding-top: 80px;
   }
+  .autumn-info { padding-top: 32px; }
   .invitation-card {
     display: grid;
     grid-template-columns: 1fr 1.3fr;
@@ -1515,15 +1529,16 @@ p {
   }
   .date-block {
     grid-row: 1/3;
+    display: block;
   }
   .big-date {
-    font-size: 68px;
+    font-size: 60px;
   }
   .venue-placeholder {
     height: 230px;
   }
   .world-transition {
-    height: 260svh;
+    height: 200svh;
   }
   .transition-sticky {
     padding-top: 80px;
@@ -1577,11 +1592,11 @@ p {
     padding: 4px 10px;
   }
   .ending {
-    padding-top: 110px;
+    padding-top: 80px;
   }
   .ending-picture {
-    width: 240px;
-    height: 210px;
+    width: 210px;
+    height: 224px;
   }
   .ending-english {
     font-size: 58px;
@@ -1623,14 +1638,18 @@ p {
     min-width: 75px;
   }
   .stop-label {
-    font-size: 9px;
+    font-size: 11px;
+    padding: 4px 5px;
   }
   .town-map {
     height: 580px;
   }
   .venue-photo figcaption {
-    font-size: 9px;
+    font-size: 12px;
   }
+  .date-block { column-gap: 10px; }
+  .autumn-info .big-date { font-size: 42px; }
+  .autumn-info .date-year { font-size: 11px; letter-spacing: 0; }
   .day-nav a {
     padding-left: 15px;
     padding-right: 15px;
@@ -1641,7 +1660,7 @@ p {
   align-items: flex-end;
   justify-content: center;
   gap: 18px;
-  margin-top: 35px;
+  margin-top: 24px;
 }
 .town-residents .pixel-icon {
   width: 28px;
