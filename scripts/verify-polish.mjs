@@ -33,11 +33,11 @@ for (const engine of [chromium, webkit]) {
         const dimensions = await img.evaluate(e => ({ width: e.clientWidth, height: e.clientHeight, src: e.currentSrc }));
         assert.ok(Math.abs(dimensions.width / dimensions.height - 4 / 3) < .01, "Preserve the complete venue image");
         assert.ok(dimensions.src.includes(`${id}-place-`));
-        assert.match(await page.locator(`#${id}-info .venue-full`).getAttribute("href"), /1440\.webp$/);
+        assert.equal(await page.locator(`#${id}-info .venue-photo a`).count(), 0);
         await page.screenshot({ path: `test-results/${engine.name()}-${width}-${id}-venue.png` });
       }
-      assert.match(await page.locator("#day1-info .schedule").innerText(), /上午\s+接新娘\s+下午\s+草坪婚礼\s+雷迪森酒店草坪\s+晚上\s+晚宴/);
-      assert.match(await page.locator(".summary-day1 .summary-schedule").innerText(), /上午\s+接新娘/);
+      assert.match(await page.locator("#day1-info .schedule").innerText(), /上午9:00\s+接新娘\s+下午14:00\s+草坪婚礼\s+雷迪森酒店草坪\s+晚上17:30\s+晚宴/);
+      assert.match(await page.locator(".summary-day1 .summary-schedule").innerText(), /上午9:00\s+接新娘/);
       assert.equal(await page.locator(".transition-teaser .eyebrow").count(), 0);
       assert.equal(await page.locator(".transition-teaser h2").innerText(), "One more thing…");
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));

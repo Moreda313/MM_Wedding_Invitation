@@ -2,7 +2,6 @@ export type MusicScene = "day1" | "transition" | "day2" | "party" | "ending";
 export type Photo = {
   src: string; alt: string; caption: string;
   srcSet?: { src: string; width: number }[];
-  full?: string;
   width?: number;
   height?: number;
 };
@@ -27,9 +26,9 @@ export type WeddingDay = {
 export const wedding = {
   couple: { groom: "毛凌涛", bride: "陈婉梦", monogram: "M & M" },
   greeting: [
-    { lines: ["Hi", "好久不见。"], note: "近来可好？" },
-    { lines: ["浪漫的人生时刻", "想和你分享。"], note: "" },
-    { lines: ["我们要", "结婚啦！"], note: "想请你来，和我们一起庆祝。" },
+    { lines: ["Hi", "好久不见。"], note: "近来可好？", emoji: "👋", emojiLine: 0 },
+    { lines: ["浪漫的人生时刻", "想和你分享。"], note: "", emoji: "💌", emojiLine: 1 },
+    { lines: ["我们要", "结婚啦！"], note: "想请你来，和我们一起庆祝。", emoji: "🎉", emojiLine: 1 },
   ],
   intro: {
     label: "一封给你的邀请",
@@ -42,7 +41,7 @@ export const wedding = {
     date: "2026.10.22",
     weekday: "星期四",
     city: "建德",
-    venue: "杭州新安雷迪森酒店",
+    venue: "新安江雷迪森酒店",
     venueLabel: "晚宴地点",
     ceremonyVenue: "雷迪森酒店草坪",
     mapLabel: "打开地图",
@@ -50,14 +49,13 @@ export const wedding = {
     mapUrl: "https://surl.amap.com/mzxjIZkp9A1",
     note: "想请你见证我们的婚礼，\n也想借这个机会，好好聚一聚。",
     schedule: [
-      { time: "上午", title: "接新娘" },
-      { time: "下午", title: "草坪婚礼", note: "雷迪森酒店草坪" },
-      { time: "晚上", title: "晚宴" },
+      { time: "上午9:00", title: "接新娘" },
+      { time: "下午14:00", title: "草坪婚礼", note: "雷迪森酒店草坪" },
+      { time: "晚上17:30", title: "晚宴" },
     ],
     venuePhoto: {
       src: "/assets/photos/day1-place-960.webp",
       srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day1-place-${width}.webp`, width })),
-      full: "/assets/photos/day1-place-1440.webp",
       width: 1440, height: 1080,
       alt: "建德婚礼场地示意图：白绿花园中的仪式区、观礼席、甜品区和迎宾区",
       caption: "雷迪森酒店草坪",
@@ -78,9 +76,9 @@ export const wedding = {
     mapUrl: "https://surl.amap.com/dCdJgKy170lF",
     note: "来参加婚礼，\n也来和许久没见的朋友聚一聚。",
     schedule: [
-      { time: "11:00", title: "午宴开始", note: "午宴后前往草坪" },
+      { time: "中午11:00", title: "午宴开始", note: "午宴后前往草坪" },
       {
-        time: "14:00",
+        time: "下午14:00",
         title: "草坪婚礼与派对",
         note: "遂昌源口大草坪",
       },
@@ -88,7 +86,6 @@ export const wedding = {
     venuePhoto: {
       src: "/assets/photos/day2-place-960.webp",
       srcSet: [640, 960, 1440].map((width) => ({ src: `/assets/photos/day2-place-${width}.webp`, width })),
-      full: "/assets/photos/day2-place-1440.webp",
       width: 1440, height: 1080,
       alt: "遂昌婚礼场地示意图：秋日星露谷风格的花拱、木椅、花草和山景",
       caption: "遂昌源口大草坪",
@@ -128,7 +125,7 @@ export const wedding = {
   },
   party: {
     eyebrow: "小镇活动一览",
-    title: "和你们一起，\n待一个下午。",
+    title: "在一起，\n享受秋日时光。",
     selected: "已标记",
     unselected: "标记想玩",
     activities: [
@@ -139,7 +136,7 @@ export const wedding = {
       { id: "tennis", name: "来挥一拍", icon: "tennis", x: 79, y: 56 },
       { id: "flowers", name: "做一束花", icon: "Bouquet", x: 50, y: 70 },
       { id: "seed", name: "把种子带回家", icon: "Mixed_Seeds", x: 22, y: 86 },
-      { id: "music", name: "听现场音乐", icon: "Drum_Block", x: 73, y: 86 },
+      { id: "music", name: "听现场音乐", icon: "Flute_Block", x: 73, y: 86 },
       {
         id: "lucky",
         name: "试试手气",
@@ -157,7 +154,6 @@ export const wedding = {
   },
   summary: {
     title: "婚礼信息",
-    note: "第一天接亲、草坪仪式及晚宴的具体钟点待补充。",
     enter: "查看时间与地点",
   },
   ui: {
@@ -182,7 +178,6 @@ export const wedding = {
     jumpDay1: "第一天 · 建德",
     jumpDay2: "第二天 · 遂昌",
     jumpSummary: "信息汇总",
-    viewVenue: "查看大图",
   },
   audio: {
     fadeSeconds: 3,

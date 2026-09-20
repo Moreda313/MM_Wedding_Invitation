@@ -18,8 +18,22 @@ for (const engine of [chromium, webkit]) {
       page.on("response", r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
       await page.goto(url, { waitUntil: "networkidle" });
       const text = await page.locator("main").textContent();
-      for (const old of ["等等，似乎", "想玩什么", "不用全部打卡", "种出来了，记得发照片", "点选感兴趣"])
+      for (const old of ["等等，似乎", "想玩什么", "不用全部打卡", "种出来了，记得发照片", "点选感兴趣", "杭州新安", "查看大图", "具体钟点待补充", "和你们一起"])
         assert.ok(!text.includes(old), old);
+      assert.deepEqual(await page.locator(".greeting-emoji").allTextContents(), ["👋", "💌", "🎉"]);
+      assert.equal(await page.locator(".greeting-frame:not(.announcement-greeting) img").count(), 0);
+      assert.equal(await page.locator("#party h2").innerText(), "在一起，\n享受秋日时光。");
+      assert.equal(await page.locator(".venue-photo a").count(), 0);
+      assert.match(await page.locator('#day1-info .venue-block h3').innerText(), /^新安江雷迪森酒店$/);
+      for (const [id, times] of [["day1", ["上午9:00", "下午14:00", "晚上17:30"]], ["day2", ["中午11:00", "下午14:00"]]]) {
+        assert.deepEqual(await page.locator(`#${id}-info .schedule-row > span`).allTextContents(), times);
+        assert.deepEqual(await page.locator(`.summary-${id} .summary-schedule dt`).allTextContents(), times);
+        for (const selector of [`#${id}-info .schedule-row`, `.summary-${id} .summary-schedule > div`])
+          assert.ok(await page.locator(selector).evaluateAll(rows => rows.every(row => {
+            const [time, details] = [...row.children].map(e => e.getBoundingClientRect());
+            return time.right <= details.left && details.width >= 100;
+          })), "Long time labels must not overlap the activity titles");
+      }
       await page.locator(".greeting").evaluate(e => scrollTo({ top: (e.offsetHeight - innerHeight) * .9, behavior: "instant" }));
       await page.waitForTimeout(1100);
       assert.ok(await page.locator(".announcement-greeting").evaluate(e => getComputedStyle(e).opacity === "1"));
@@ -48,10 +62,13 @@ for (const engine of [chromium, webkit]) {
       // Wait for the final visible source, and still fail on broken images.
       await page.waitForFunction(() => [...document.querySelectorAll(".map-autumn img")]
         .every(image => image.complete && image.naturalWidth > 0));
-      assert.equal(await page.locator(".map-autumn img").count(), 8);
+      assert.equal(await page.locator(".map-autumn img").count(), 19);
+      assert.match(await page.locator('[data-activity="music"] img').getAttribute("src"), /Flute_Block\.png$/);
       await page.waitForTimeout(900);
       for (const stop of await page.locator(".map-stop").all()) {
-        await stop.scrollIntoViewIfNeeded();
+        // The map is taller than a 320px phone's viewport. Center each control
+        // before hit-testing, so fixed header/footer navigation is excluded.
+        await stop.evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));
         assert.ok(await stop.evaluate(e => {
           const r = e.getBoundingClientRect();
           return e.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));

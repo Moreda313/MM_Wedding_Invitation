@@ -49,12 +49,6 @@ export function DayInfo({
           <span>{wedding.ui.venue}</span>
           {day.ceremonyVenue}
         </figcaption>
-        {day.venuePhoto.full && (
-          <a className="venue-full text-link" href={assetUrl(day.venuePhoto.full)}
-            target="_blank" rel="noreferrer" aria-label={`${day.ceremonyVenue}：${wedding.ui.viewVenue}`}>
-            {wedding.ui.viewVenue}<span aria-hidden="true">↗</span>
-          </a>
-        )}
       </figure>
       <p className="body-copy preserve venue-invitation" data-reveal>{day.note}</p>
       <div className="invitation-card" data-reveal>

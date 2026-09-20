@@ -91,14 +91,25 @@ function PartyPreview() {
         <div className="map-river" aria-hidden="true" />
         <div className="map-path" aria-hidden="true" />
         <div className="map-autumn" aria-hidden="true">
+          <span className="map-bridge" />
+          <span className="map-fence fence-top" /><span className="map-fence fence-bottom" />
+          {Array.from({ length: 7 }, (_, i) => <i key={i} className={`map-grass grass-${i + 1}`} />)}
           <span className="map-tree tree-one"><PixelIcon name="Oak_Fall" /></span>
           <span className="map-tree tree-two"><PixelIcon name="Maple_Fall" /></span>
           <span className="map-tree tree-three"><PixelIcon name="Oak_Fall" /></span>
+          <span className="map-tree tree-four"><PixelIcon name="Maple_Fall" /></span>
+          <span className="map-tree tree-five"><PixelIcon name="Oak_Fall" /></span>
           <span className="map-harvest harvest-pumpkin"><PixelIcon name="Pumpkin" /></span>
           <span className="map-harvest harvest-berries"><PixelIcon name="Cranberries" /></span>
           <span className="map-harvest harvest-nut"><PixelIcon name="Hazelnut" /></span>
           <span className="map-harvest harvest-acorn"><PixelIcon name="Acorn" /></span>
           <span className="map-harvest harvest-pumpkin-small"><PixelIcon name="Pumpkin" /></span>
+          <span className="map-harvest harvest-apple"><PixelIcon name="Apple" /></span>
+          <span className="map-harvest harvest-grapes"><PixelIcon name="Grape" /></span>
+          <span className="map-grove"><PixelIcon name="Chanterelle" /><PixelIcon name="Chanterelle" /></span>
+          <span className="map-flowerbed"><PixelIcon name="Fairy_Rose" /><PixelIcon name="Fairy_Rose" /><PixelIcon name="Fairy_Rose" /></span>
+          <span className="map-friends friend-chicken"><PixelIcon name="White_Chicken" /></span>
+          <span className="map-friends friend-junimo"><PixelIcon name="Junimo_Icon" /></span>
           {Array.from({ length: 9 }, (_, i) => <i key={i} className={`map-leaf leaf-${i + 1}`} />)}
         </div>
         {wedding.party.activities.map((activity) => (

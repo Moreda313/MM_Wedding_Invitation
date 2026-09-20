@@ -338,15 +338,18 @@ p {
   line-height: 1.5;
   letter-spacing: -0.035em;
 }
-.greeting-frame h1 span {
+.greeting-frame h1 > span {
   display: block;
 }
-.greeting-frame h1 .celebration-emoji {
+.greeting-frame h1 .greeting-emoji {
   display: inline-block;
   margin-left: .22em;
   font-size: .75em;
   vertical-align: .08em;
   transform: rotate(-8deg);
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: 0;
 }
 .greeting-bouquet {
   display: flex;
@@ -363,7 +366,7 @@ p {
   font-size: clamp(56px, 14.4vw, 64px);
   line-height: 1.4;
 }
-.first-greeting h1 span:first-child {
+.first-greeting h1 > span:first-child {
   font-family: "Wedding Script", "Snell Roundhand", cursive;
   font-size: 1.2em;
   line-height: 1.4;
@@ -371,6 +374,7 @@ p {
   letter-spacing: 0;
   color: var(--moss);
 }
+.first-greeting h1 .greeting-emoji { font-size: .5em; vertical-align: .15em; margin-left: .4em; }
 .greeting-note {
   font-size: 17px;
   color: var(--muted);
@@ -553,13 +557,14 @@ p {
 }
 .schedule-row {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 14px;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 10px;
   padding: 17px 0;
 }
 .schedule-row > span {
   font-family: Georgia, "PingFang SC", serif;
-  font-size: 19px;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .schedule-row strong {
@@ -612,7 +617,6 @@ p {
   width: 100%;
   height: auto;
 }
-.venue-full { margin-top: 10px; color: var(--moss); }
 .venue-photo figcaption {
   display: flex;
   justify-content: space-between;
@@ -1055,7 +1059,7 @@ p {
 }
 .town-map {
   position: relative;
-  height: 555px;
+  height: 600px;
   margin: 35px -10px 0;
   overflow: hidden;
   border: 5px solid var(--ivory);
@@ -1113,8 +1117,9 @@ p {
 }
 .map-tree .pixel-icon { width: 100%; height: auto; }
 .tree-one {
-  left: -8px;
-  top: -7%;
+  left: -4px;
+  top: 1%;
+  width: 58px;
 }
 .tree-two {
   right: -12px;
@@ -1122,18 +1127,63 @@ p {
   width: 58px;
 }
 .tree-three {
-  left: -36px;
-  bottom: -26px;
-  width: 80px;
+  left: 45%;
+  bottom: -5px;
+  width: 50px;
 }
+.tree-four { left: -5px; top: 27%; width: 38px; }
+.tree-five { right: -7px; top: -9px; width: 50px; }
+.map-bridge {
+  position: absolute;
+  left: 39%; top: 40%; width: 21%; height: 15%;
+  border-left: 4px solid #ae9973;
+  border-right: 4px solid #ae9973;
+  background: repeating-linear-gradient(0deg, #cbb794 0 8px, #b09b78 8px 10px);
+  box-shadow: 3px 4px 0 #52664e20;
+}
+.map-fence {
+  position: absolute;
+  height: 22px;
+  background: linear-gradient(transparent 7px, #af9973 7px 11px, transparent 11px 17px, #af9973 17px 20px, transparent 20px),
+    repeating-linear-gradient(90deg, #bca882 0 4px, transparent 4px 19px);
+}
+.fence-top { right: 16%; top: 2%; width: 18%; }
+.fence-bottom { left: 2%; bottom: 2%; width: 28%; }
+.map-grass {
+  position: absolute;
+  width: 36px; height: 15px;
+  background: repeating-linear-gradient(90deg, #89985e 0 3px, transparent 3px 8px);
+  opacity: .55;
+  clip-path: polygon(0 100%, 0 45%, 15% 70%, 20% 15%, 40% 65%, 48% 0, 60% 60%, 78% 25%, 88% 75%, 100% 45%, 100% 100%);
+}
+.grass-1 { left: 13%; top: 6%; }
+.grass-2 { right: 6%; top: 23%; }
+.grass-3 { left: 23%; top: 36%; }
+.grass-4 { right: 27%; top: 60%; }
+.grass-5 { left: 2%; top: 68%; }
+.grass-6 { left: 31%; top: 79%; }
+.grass-7 { right: 6%; bottom: 5%; }
 .map-harvest { position: absolute; }
 .map-harvest .pixel-icon { width: 28px; height: 28px; }
 .harvest-pumpkin { left: 5%; top: 37%; }
 .harvest-pumpkin .pixel-icon { width: 36px; height: 36px; }
-.harvest-berries { right: 14%; top: 70%; }
+.harvest-berries { right: 23%; bottom: 1%; }
 .harvest-nut { left: 24%; top: 72%; }
 .harvest-acorn { left: 29%; top: 2%; }
 .harvest-pumpkin-small { right: 3%; bottom: 2%; }
+.harvest-apple { left: 26%; top: 13%; }
+.harvest-grapes { left: 28%; top: 31%; }
+.harvest-apple .pixel-icon, .harvest-grapes .pixel-icon { width: 23px; height: 23px; }
+.map-grove, .map-flowerbed, .map-friends { position: absolute; }
+.map-grove { left: 3%; top: 72%; display: flex; align-items: flex-end; }
+.map-grove .pixel-icon { width: 25px; height: 25px; }
+.map-grove .pixel-icon + .pixel-icon { width: 18px; height: 18px; margin-left: -5px; }
+.map-flowerbed { left: 69%; top: 68%; display: flex; padding: 2px; border-bottom: 3px solid #b7b184; }
+.map-flowerbed .pixel-icon { width: 20px; height: 25px; }
+.map-flowerbed .pixel-icon:nth-child(2) { margin-top: -8px; }
+.map-friends .pixel-icon { width: 25px; height: 25px; }
+.friend-chicken { left: 69%; top: 33%; }
+.friend-junimo { left: 32%; top: 54%; }
 .map-leaf {
   position: absolute;
   width: 9px;
@@ -1477,14 +1527,14 @@ p {
   font-size: 13px;
   line-height: 1.65;
 }
-.summary-schedule > div { display: grid; grid-template-columns: 62px 1fr; }
+.summary-schedule > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
+.summary-schedule dt { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .summary-schedule dt { color: var(--moss); font-weight: 500; }
 .summary-schedule dd { margin: 0; }
 .summary-card .map-actions { margin-top: 10px; gap: 24px; }
 .summary-card .map-actions a { padding: 9px 15px; min-height: 44px; gap: 20px; }
 .summary-card .map-actions button { min-height: 44px; }
 .summary-card .copy-status { min-height: 18px; margin-top: 2px; }
-.summary-note { color: var(--muted); font-size: 11px; margin-top: 15px; text-align: center; }
 .summary-top { display: flex; width: fit-content; margin: 12px auto 0; color: var(--moss); }
 @media (min-width: 700px) {
   .summary-days { grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -1602,14 +1652,14 @@ p {
     font-size: 24px;
   }
   .autumn-info .schedule-row {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 104px minmax(0, 1fr);
     gap: 8px;
   }
   .party-preview {
     max-width: 790px;
   }
   .town-map {
-    height: 650px;
+    height: 700px;
     margin-left: 0;
     margin-right: 0;
   }
@@ -1675,7 +1725,7 @@ p {
     font-size: 9px;
   }
   .town-map {
-    height: 530px;
+    height: 580px;
   }
   .venue-photo figcaption {
     font-size: 9px;

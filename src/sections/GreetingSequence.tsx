@@ -30,8 +30,8 @@ export function GreetingSequence({
             >
               <h1>
                 {greeting.lines.map((line, lineIndex) => (
-                  <span key={lineIndex}>{line}{index === wedding.greeting.length - 1 && lineIndex === 1 && (
-                    <span className="celebration-emoji" aria-hidden="true">🎉</span>
+                  <span key={lineIndex}>{line}{lineIndex === greeting.emojiLine && (
+                    <span className={`greeting-emoji ${index === wedding.greeting.length - 1 ? "celebration-emoji" : ""}`} aria-hidden="true">{greeting.emoji}</span>
                   )}</span>
                 ))}
               </h1>

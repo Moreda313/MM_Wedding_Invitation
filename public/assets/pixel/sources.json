@@ -112,5 +112,35 @@
     "page": "https://stardewvalleywiki.com/Hazelnut",
     "url": "https://stardewvalleywiki.com/mediawiki/images/3/31/Hazelnut.png",
     "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Flute_Block",
+    "page": "https://stardewvalleywiki.com/Flute_Block",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/3/31/Flute_Block.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Fairy_Rose",
+    "page": "https://stardewvalleywiki.com/Fairy_Rose",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/5/5c/Fairy_Rose.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Chanterelle",
+    "page": "https://stardewvalleywiki.com/Chanterelle",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/1/1d/Chanterelle.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Apple",
+    "page": "https://stardewvalleywiki.com/Apple",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/7/7d/Apple.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
+  },
+  {
+    "name": "Grape",
+    "page": "https://stardewvalleywiki.com/Grape",
+    "url": "https://stardewvalleywiki.com/mediawiki/images/c/c2/Grape.png",
+    "copyright": "Stardew Valley game artwork © ConcernedApe; sourced from Stardew Valley Wiki."
   }
 ]

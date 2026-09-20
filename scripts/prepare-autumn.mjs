@@ -10,6 +10,11 @@ const assets = [
   { name: "Pumpkin", path: "6/64/Pumpkin.png" },
   { name: "Cranberries", path: "6/6e/Cranberries.png" },
   { name: "Hazelnut", path: "3/31/Hazelnut.png" },
+  { name: "Flute_Block", path: "3/31/Flute_Block.png" },
+  { name: "Fairy_Rose", path: "5/5c/Fairy_Rose.png" },
+  { name: "Chanterelle", path: "1/1d/Chanterelle.png" },
+  { name: "Apple", path: "7/7d/Apple.png" },
+  { name: "Grape", path: "c/c2/Grape.png" },
 ];
 const folder = "public/assets/pixel";
 const sources = JSON.parse(await readFile(`${folder}/sources.json`, "utf8"));

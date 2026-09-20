@@ -48,7 +48,7 @@ for (const engine of [chromium, webkit]) {
       assert.equal(await page.locator(".summary-card").count(), 2);
       assert.equal(await page.locator("main > :last-child").getAttribute("id"), "info-summary");
       for (const [id, date, weekday, city, venue, address, map] of [
-        ["day1", "2026.10.22", "星期四", "建德", "杭州新安雷迪森酒店", "建德市新安江街道南山路1号", "https://surl.amap.com/mzxjIZkp9A1"],
+        ["day1", "2026.10.22", "星期四", "建德", "新安江雷迪森酒店", "建德市新安江街道南山路1号", "https://surl.amap.com/mzxjIZkp9A1"],
         ["day2", "2026.10.23", "星期五", "遂昌", "华侨东方大酒店", "遂昌县牡丹亭中路8号（近太和路）", "https://surl.amap.com/dCdJgKy170lF"],
       ]) {
         const card = page.locator(`.summary-${id}`);

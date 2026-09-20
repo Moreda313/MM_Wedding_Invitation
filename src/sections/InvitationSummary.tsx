@@ -35,7 +35,6 @@ export function InvitationSummary() {
             </article>
           ))}
         </div>
-        <p className="summary-note">{wedding.summary.note}</p>
         <a className="text-link summary-top" href="#hello">
           {wedding.ending.top}<span aria-hidden="true">↑</span>
         </a>
