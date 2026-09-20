@@ -84,9 +84,9 @@ Day 2 使用 `#F1E7D4` 米杏底与 `#584437` 正文，卡片和像素主图边�
 
 本地工作流程：`node scripts/prepare-wall-photos.mjs` 生成 25 张本地候选；`node scripts/preview-photo-wall.mjs` 生成独立样稿；确认后执行 `node scripts/publish-wall-assets.mjs`，只复制上述 11 张到正式素材目录。正式布局以后以 `src/data/memory-wall.ts` 为准。
 
-两处场地已接入用户生成的 `day1_place.png` 与 `day2_place.png`。场地图紧跟标题，图下注明“婚礼场地”和具体草坪名，然后呈现日期、酒店和日程；移除信息卡的“现场音乐”字段，不设大图链接。执行 `node scripts/prepare-venues.mjs` 生成 640、960、1440 宽的 WebP（质量 88），完整保留 4:3 构图，手机通过 srcset 按需加载。各档约 124–143 KB、260–282 KB、497–505 KB，原始 PNG 不覆盖且不提交到仓库。配置支持 src、srcSet、width、height；有实际场地照片后可替换。`pixel.bride`、`pixel.groom`、`pixel.couple` 继续预留定制像素人物。
+两处场地已接入用户生成的 `day1_place.png` 与 `day2_place.png`。场地图紧跟标题，图下注明“婚礼场地”和具体草坪名，然后呈现日期、酒店和日程；移除信息卡的“现场音乐”字段，不设大图链接。执行 `node scripts/prepare-venues.mjs` 生成 640、960、1440 宽的 WebP（质量 88），完整保留原图构图（Day 1 为 3:2，Day 2 为 4:3），手机通过 srcset 按需加载。原始 PNG 不覆盖且不提交到仓库。配置支持 src、srcSet、width、height；有实际场地照片后可替换。`pixel.bride`、`pixel.groom`、`pixel.couple` 继续预留定制像素人物。
 
-本次 Day 2 以确认的附件重新生成网页图，源文件 SHA-256 前缀为 `ed78cf45`，地址改为 `day2-place-ed78cf45-{640,960,1440}.webp`，避免浏览器复用旧 URL 缓存。只更新 Day 2 时运行 `node scripts/prepare-venues.mjs --day=2`；脚本按源文件内容生成版本号，替换原图后须同步配置中的文件名前缀。
+两天的场地图均按源文件内容生成版本号，避免浏览器复用旧 URL 缓存。Day 1 新图为白色尖拱与白绿花艺场景，地址为 `day1-place-6550e1f0-{640,960,1440}.webp`；Day 2 保持 `day2-place-ed78cf45-{640,960,1440}.webp`。只更新一天时运行 `node scripts/prepare-venues.mjs --day=1` 或 `--day=2`；替换原图后须同步配置中的文件名前缀及尺寸。
 
 建议新照片先输出宽 960–1440 的 WebP，质量 82–90，以人脸与婚纱细节为准，不需要把原片直接放入 `public/`。现有照片因为背景简单，1440 宽的版本仅约 68 KB；不是对 10 MB 原图进行覆盖压缩。
 
@@ -155,6 +155,7 @@ PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autoplay.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-polish.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autumn.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-memory-wall.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-venues.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。
