@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { MusicScene } from "../data/wedding";
+import { pinnedProgress, storyViewportHeight } from "./useStoryViewport";
 
 export function useInitialAnchor() {
   useEffect(() => {
@@ -43,13 +44,7 @@ export function useScrollProgress() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        setProgress(
-          Math.max(
-            0,
-            Math.min(1, -rect.top / Math.max(1, rect.height - innerHeight)),
-          ),
-        );
+        setProgress(pinnedProgress(ref.current));
       });
     };
     update();
@@ -75,7 +70,7 @@ export function useMusicScene() {
         document
           .querySelectorAll<HTMLElement>("[data-music]")
           .forEach((element) => {
-            if (element.getBoundingClientRect().top <= innerHeight * 0.5)
+            if (element.getBoundingClientRect().top <= storyViewportHeight() * 0.5)
               next = element.dataset.music as MusicScene;
           });
         setScene(next);
@@ -102,20 +97,18 @@ export function useOpeningStage(frameCount: number) {
     const update = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const greeting = document.querySelector("#hello");
+        const greeting = document.querySelector<HTMLElement>("#hello");
         const hero = document.querySelector("#day1");
         if (!greeting || !hero) return;
-        const rect = greeting.getBoundingClientRect();
-        const progress = Math.max(
-          0, -rect.top / Math.max(1, rect.height - innerHeight),
-        );
+        const height = storyViewportHeight();
+        const progress = pinnedProgress(greeting);
         const lastFrame = greeting.querySelector(".greeting-frame:last-of-type");
         const announced = reduced
           ? !!lastFrame &&
-            lastFrame.getBoundingClientRect().top <= innerHeight * 0.55
+            lastFrame.getBoundingClientRect().top <= height * 0.55
           : Math.round(progress * (frameCount - 1)) >= frameCount - 1;
         setStage(
-          hero.getBoundingClientRect().top < innerHeight * 0.9
+          hero.getBoundingClientRect().top < height * 0.9
             ? "invitation"
             : announced ? "announcement" : "opening",
         );

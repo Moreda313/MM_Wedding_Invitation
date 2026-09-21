@@ -15,8 +15,10 @@ import { Ending } from "./sections/Ending";
 import { MemoryWall } from "./sections/MemoryWall";
 import { InvitationSummary } from "./sections/InvitationSummary";
 import { useUpcomingAssets } from "./hooks/useUpcomingAssets";
+import { useStoryViewport } from "./hooks/useStoryViewport";
 
 export default function App() {
+  useStoryViewport();
   useInitialAnchor();
   const scene = useMusicScene();
   const openingStage = useOpeningStage(wedding.greeting.length);

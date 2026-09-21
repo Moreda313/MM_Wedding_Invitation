@@ -293,13 +293,11 @@ p {
   border-color: #6f7c4e40;
 }
 .greeting {
-  height: 260vh;
-  height: 260svh;
+  height: calc(var(--story-vh, 1svh) * 260);
   background: var(--paper);
 }
 .greeting-sticky {
-  height: 100vh;
-  height: 100svh;
+  height: calc(var(--story-vh, 1svh) * 100);
   position: sticky;
   top: 0;
   overflow: hidden;
@@ -392,16 +390,13 @@ p {
   background: var(--garden-bg);
 }
 .day-one-hero {
-  --hero-height: max(650px, 100vh);
+  --hero-height: max(650px, calc(var(--story-vh, 1svh) * 100));
   height: var(--hero-height);
   position: relative;
   overflow: hidden;
   max-width: 1000px;
   margin: auto;
   background: var(--ivory);
-}
-@supports (height: 100svh) {
-  .day-one-hero { --hero-height: max(650px, 100svh); }
 }
 .couple-photo {
   // Keep the original 2:3 composition at every viewport size. Do not stretch
@@ -643,14 +638,12 @@ p {
   flex-shrink: 0;
 }
 .world-transition {
-  height: 200vh;
-  height: 200svh;
+  height: calc(var(--story-vh, 1svh) * 200);
   position: relative;
   background: var(--paper);
 }
 .transition-sticky {
-  height: 100vh;
-  height: 100svh;
+  height: calc(var(--story-vh, 1svh) * 100);
   position: sticky;
   top: 0;
   overflow: hidden;
@@ -802,8 +795,7 @@ p {
 .portal {
   position: relative;
   width: min(62vw, 300px);
-  height: 29vh;
-  height: 29svh;
+  height: calc(var(--story-vh, 1svh) * 29);
   max-height: 350px;
   margin-top: 28px;
   border: 6px solid #f9f6e9;
@@ -1378,7 +1370,7 @@ p {
   /* This final sheet includes its own header inset; align it with the viewport. */
   scroll-margin-top: -80px;
   padding: 72px 22px calc(85px + env(safe-area-inset-bottom));
-  min-height: 100svh;
+  min-height: calc(var(--story-vh, 1svh) * 100);
 }
 .summary-inner {
   max-width: 860px;
@@ -1532,14 +1524,11 @@ p {
   .venue-placeholder {
     height: 230px;
   }
-  .world-transition {
-    height: 200svh;
-  }
   .transition-sticky {
     padding-top: 80px;
   }
   .portal {
-    height: 32svh;
+    height: calc(var(--story-vh, 1svh) * 32);
     width: 290px;
     margin-top: 25px;
   }
@@ -1748,7 +1737,7 @@ p {
     transform: none !important;
     visibility: visible !important;
     pointer-events: auto !important;
-    min-height: 70svh;
+    min-height: calc(var(--story-vh, 1svh) * 70);
     padding: 35px 9%;
   }
   .greeting-frame[aria-hidden="true"] {
