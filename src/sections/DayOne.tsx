@@ -15,11 +15,13 @@ export function DayOne() {
                 `${assetUrl(`/assets/photos/couple-${width}.webp`)} ${width}w`,
             )
             .join(", ")}
-          sizes="(min-width: 800px) 760px, 100vw"
+          sizes="(min-width: 760px) 760px, 100vw"
           alt={wedding.hero.photoAlt}
           width="960"
           height="1440"
-          loading="lazy"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="hero-top">
           <p className="eyebrow">

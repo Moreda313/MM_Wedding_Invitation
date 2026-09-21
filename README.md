@@ -80,6 +80,8 @@ Day 2 使用 `#F1E7D4` 米杏底与 `#584437` 正文，卡片和像素主图边�
 
 原始 ZIP 和 PNG 不会被修改。已有婚纱照生成 640、960、1440 三档 WebP，质量设为 86；手机通过 `srcset` 选择适合的尺寸。星露谷图裁出花架、新人与小动物，保留原图的完整网页副本。
 
+Day 1 大婚纱照按原始 2:3 比例完整居中显示，不再使用 `object-fit: cover` 放大裁切。全屏展示区域和照片尺寸在下载前就确定，屏幕比例不同的空余区域沿用暖白底；只允许等比缩放，不随滚动切换构图。首张婚纱照使用 eager / high 优先加载，在开场问候期间开始下载；其他照片保持原有按需加载。`verify-hero-photo.mjs` 在 Chrome / WebKit 下检查延迟下载、解码前后尺寸、滚动、刷新与横竖屏切换。
+
 原来的六个空白照片框已移除。正式照片墙使用用户确认的 01、02、03、04、15、16、18、19、22、24、25，共 11 张，放在 Day 2 活动之后、`#ending` 之前，锚点为 `#memory-wall`，延续 Pelican Town 小镇音乐；进入告别页才切换 Dance of the Moonlight Jellies。米杏底色与 Day 2 相连，点缀浅草地、秋树与祝尼魔，不铺复杂背景图。
 
 保留已确认的图钉、胶带、白边、轻微旋转和星露谷点缀；文案为“下一张，和你一起。把这次相聚，也留在照片里。”。390px 手机上墙体约高 280px。16、18 号通过 CSS 做 4:5 展示裁剪，其他照片保留原比例。墙体样式限定在 `MemoryWall.scss` 的组件作用域内，不影响活动地图。
@@ -163,6 +165,7 @@ PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-venues.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-layout.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-share.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-town-interactions.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-hero-photo.mjs
 ```
 
 Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `scripts/verify.mjs` 中的可执行路径，或安装 Playwright Chromium 并移除路径配置。可用 `PREVIEW_URL` 指定生产预览地址。
