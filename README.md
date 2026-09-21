@@ -182,7 +182,16 @@ HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网
 
 分享标题为“毛凌涛 & 陈婉梦 · 婚礼请柬”，OG / Twitter 描述为“2026.10.22 — 10.23 · Garden Wedding → Stardew Autumn Party”；普通网页描述保持中文。
 
-正式服务器部署必须上传整个 `dist/`（包括新版封面和 HTML）。目前 GitHub 工作流只发布 Pages，不会自动同步香港服务器。确认 SSH 主机与目录后，可先运行 `rsync -avzn dist/ 主机别名:/var/www/mm-wedding/` 预览，再运行 `rsync -avz dist/ 主机别名:/var/www/mm-wedding/`；不要未经核对就使用 `--delete` 清除网站目录中的其他文件。
+正式服务器部署必须上传整个 `dist/`（包括新版封面和 HTML）。GitHub 工作流只发布 Pages，不会自动同步香港服务器；每次修改后需要同时推送 GitHub、同步服务器，并分别校验。用户已确认 SSH 目标为 `root@47.83.183.251`，网站目录为 `/var/www/mm-wedding/`。此流程也记录在 [AGENTS.md](AGENTS.md)，供后续修改沿用。
+
+```sh
+npm run build
+rsync -avzn --delete dist/ root@47.83.183.251:/var/www/mm-wedding/
+# 确认目标目录与待删除文件后，再实际同步：
+rsync -avz --delay-updates --delete-delay dist/ root@47.83.183.251:/var/www/mm-wedding/
+```
+
+不得上传 GitHub 子路径构建到服务器；不得清理此目录以外的内容。如果预览发现服务器配置或不相关文件会被删除，应先停止核对。
 
 部署后验证：
 
