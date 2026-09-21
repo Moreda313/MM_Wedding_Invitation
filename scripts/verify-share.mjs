@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import sharp from "sharp";
 import { createHash } from "node:crypto";
+import { mutedSession } from "./muted-session.mjs";
 
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:4176/";
 const site = process.env.EXPECTED_SITE_URL || "https://wedding.moreda.me/";
@@ -54,9 +55,14 @@ try {
   await page.close();
 
   const app = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  // This test checks share-only artwork, not completion of background music
+  // downloads. Playback/preloading has its own live regression suite.
+  await mutedSession(app);
   const covers = [];
   app.on("request", request => { if (request.url().includes("/assets/share/")) covers.push(request.url()); });
-  await app.goto(url, { waitUntil: "networkidle" });
+  await app.goto(url, { waitUntil: "domcontentloaded" });
+  await app.locator(".invitation").waitFor();
+  await app.waitForTimeout(1000);
   assert.equal(await app.locator('body img[src*="/assets/share/"]').count(), 0);
   assert.equal(covers.length, 0, "Share-only artwork must not cost bandwidth in the invitation");
   assert.equal(await app.locator(".invitation").getAttribute("data-audio-status"), "off");
