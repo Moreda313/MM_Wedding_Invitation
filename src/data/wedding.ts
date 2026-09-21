@@ -172,24 +172,24 @@ export const wedding = {
   audio: {
     fadeSeconds: 3,
     tracks: {
-      day1: { src: "/audio/rain.mp3", title: "Rain · 秦基博", volume: 0.55 },
+      day1: { src: "/audio/rain-intro-v2.mp3", title: "Rain · 秦基博", volume: 0.55 },
       transition: {
-        src: "/audio/fall.mp3",
+        src: "/audio/fall-loop-v2.mp3",
         title: "Fall (Ghost Synth)",
         volume: 0.5,
       },
       day2: {
-        src: "/audio/flower-dance.mp3",
+        src: "/audio/flower-dance-loop-v2.mp3",
         title: "Flower Dance",
         volume: 0.52,
       },
       party: {
-        src: "/audio/pelican-town.mp3",
+        src: "/audio/pelican-town-loop-v2.mp3",
         title: "Pelican Town",
         volume: 0.45,
       },
       ending: {
-        src: "/audio/moonlight-jellies.mp3",
+        src: "/audio/moonlight-jellies-loop-v2.mp3",
         title: "Dance Of The Moonlight Jellies",
         volume: 0.3,
       },

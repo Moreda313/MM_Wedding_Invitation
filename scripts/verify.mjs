@@ -50,7 +50,7 @@ try {
     assert.equal(
       audioRequests.length,
       0,
-      "Audio must not load on initial page visit",
+      "A remembered pause must suppress initial audio preloading",
     );
     assert.equal(
       await page.locator(".invitation").getAttribute("data-audio-status"),
@@ -151,7 +151,7 @@ try {
     assert.equal(
       audioRequests.length,
       0,
-      "Scrolling without consent must never fetch audio",
+      "Scrolling with a remembered pause must not fetch audio",
     );
     assert.equal(await page.locator(".story-photo").count(), 0);
     assert.equal(await page.locator("#memory-wall .snapshot").count(), 11);
@@ -187,14 +187,14 @@ try {
             "playing",
       );
       assert.ok(
-        audioRequests.some((request) => request.endsWith("/rain.mp3")),
+        audioRequests.some((request) => request.endsWith("/rain-intro-v2.mp3")),
         "Day 1 must request Rain after consent",
       );
       for (const [selector, scene, file] of [
-        [".world-transition", "transition", "fall.mp3"],
-        ["#day2", "day2", "flower-dance.mp3"],
-        ["#party", "party", "pelican-town.mp3"],
-        ["#ending", "ending", "moonlight-jellies.mp3"],
+        [".world-transition", "transition", "fall-loop-v2.mp3"],
+        ["#day2", "day2", "flower-dance-loop-v2.mp3"],
+        ["#party", "party", "pelican-town-loop-v2.mp3"],
+        ["#ending", "ending", "moonlight-jellies-loop-v2.mp3"],
       ]) {
         await page
           .locator(selector)

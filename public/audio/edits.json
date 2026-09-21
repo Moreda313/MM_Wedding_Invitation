@@ -1,0 +1,46 @@
+{
+  "bitrate": "96kbps stereo",
+  "edits": [
+    {
+      "id": "day1",
+      "source": "rain.mp3",
+      "file": "rain-intro-v2.mp3",
+      "end": 165.3,
+      "fade": 3,
+      "note": "Conservative end at a quieter window before the user-reported ~168s vocal entry; not a verified vocal-onset timestamp.",
+      "bytes": 1984305
+    },
+    {
+      "id": "transition",
+      "source": "21. Fall (Ghost Synth).mp3",
+      "file": "fall-loop-v2.mp3",
+      "end": 24,
+      "fade": 2,
+      "bytes": 288749
+    },
+    {
+      "id": "day2",
+      "source": "09. Flower Dance.mp3",
+      "file": "flower-dance-loop-v2.mp3",
+      "end": 29.9,
+      "fade": 1.5,
+      "bytes": 359593
+    },
+    {
+      "id": "party",
+      "source": "08. Pelican Town.mp3",
+      "file": "pelican-town-loop-v2.mp3",
+      "end": 56.3,
+      "fade": 3,
+      "bytes": 676510
+    },
+    {
+      "id": "ending",
+      "source": "19. Dance Of The Moonlight Jellies.mp3",
+      "file": "moonlight-jellies-loop-v2.mp3",
+      "end": 55.2,
+      "fade": 3,
+      "bytes": 663345
+    }
+  ]
+}

@@ -80,7 +80,7 @@ Day 2 使用 `#F1E7D4` 米杏底与 `#584437` 正文，卡片和像素主图边�
 
 原始 ZIP 和 PNG 不会被修改。已有婚纱照生成 640、960、1440 三档 WebP，质量设为 86；手机通过 `srcset` 选择适合的尺寸。星露谷图裁出花架、新人与小动物，保留原图的完整网页副本。
 
-Day 1 大婚纱照按原始 2:3 比例完整居中显示，不再使用 `object-fit: cover` 放大裁切。全屏展示区域和照片尺寸在下载前就确定，屏幕比例不同的空余区域沿用暖白底；只允许等比缩放，不随滚动切换构图。首张婚纱照使用 eager / high 优先加载，在开场问候期间开始下载；其他照片保持原有按需加载。`verify-hero-photo.mjs` 在 Chrome / WebKit 下检查延迟下载、解码前后尺寸、滚动、刷新与横竖屏切换。
+Day 1 大婚纱照按原始 2:3 比例完整居中显示，不再使用 `object-fit: cover` 放大裁切。全屏展示区域和照片尺寸在下载前就确定，屏幕比例不同的空余区域沿用暖白底；只允许等比缩放，不随滚动切换构图。首张婚纱照使用 eager / high 优先加载，在开场问候期间开始下载；后续星露谷主图、场地图、像素素材及照片墙在首屏资源就绪后低优先级提前加载。`verify-hero-photo.mjs` 在 Chrome / WebKit 下检查延迟下载、解码前后尺寸、滚动、刷新与横竖屏切换。
 
 原来的六个空白照片框已移除。正式照片墙使用用户确认的 01、02、03、04、15、16、18、19、22、24、25，共 11 张，放在 Day 2 活动之后、`#ending` 之前，锚点为 `#memory-wall`，延续 Pelican Town 小镇音乐；进入告别页才切换 Dance of the Moonlight Jellies。米杏底色与 Day 2 相连，点缀浅草地、秋树与祝尼魔，不铺复杂背景图。
 
@@ -110,23 +110,25 @@ npm run prepare:assets
 
 | 章节             | 曲目                           | 当前文件                       |
 | ---------------- | ------------------------------ | ------------------------------ |
-| Day 1            | Rain · 秦基博                  | `/audio/rain.mp3`              |
-| 世界转换         | Fall (Ghost Synth)，前 24 秒   | `/audio/fall.mp3`              |
-| Day 2 主图与日程 | Flower Dance                   | `/audio/flower-dance.mp3`      |
-| 活动地图         | Pelican Town                   | `/audio/pelican-town.mp3`      |
-| 结尾             | Dance Of The Moonlight Jellies | `/audio/moonlight-jellies.mp3` |
+| Day 1            | Rain · 秦基博，165.3 秒         | `/audio/rain-intro-v2.mp3`              |
+| 世界转换         | Fall (Ghost Synth)，24 秒      | `/audio/fall-loop-v2.mp3`              |
+| Day 2 主图与日程 | Flower Dance，29.9 秒           | `/audio/flower-dance-loop-v2.mp3`      |
+| 活动地图         | Pelican Town，56.3 秒           | `/audio/pelican-town-loop-v2.mp3`      |
+| 结尾             | Dance Of The Moonlight Jellies，55.2 秒 | `/audio/moonlight-jellies-loop-v2.mp3` |
 
-音乐偏好默认开启，但不在页面加载时尝试播放。前两段问候不请求音频、不调用播放或音频解锁，点击和触摸也保持安静。进入“我们要结婚啦”才尝试播放 Rain；浏览器允许时直接播放，否则显示“音乐待播放”，在后续真实触碰、点击或键盘操作时重试，不伪装成已播放。仅滚动事件不被当成播放授权。用户点击开关关闭后，页面交互、滚动、切换章节都不会重新开启；关闭偏好保存在当前浏览器会话内，刷新同样尊重关闭选择。
+音乐偏好默认开启，但不在页面加载时尝试播放。前两段问候会静默准备音频，不调用播放或音频解锁，点击和触摸也保持安静。进入“我们要结婚啦”才尝试播放 Rain；浏览器允许时直接播放，否则显示“音乐待播放”，在后续真实触碰、点击或键盘操作时重试，不伪装成已播放。仅滚动事件不被当成播放授权。用户点击开关暂停后，页面交互、滚动、切换章节都不会重新开启；暂停偏好保存在当前浏览器会话内，刷新同样尊重关闭选择。已记住暂停的会话不主动预加载音乐。
 
 Day 1 播放 Rain。音乐由当前阅读章节决定，向上滚动也会返回对应曲目，不要求宾客停留固定时长。快速跨章节时以最后到达的章节为准。回到前两段问候会淡出并暂停、隐藏开关，但不把这种叙事性暂停写成用户静音偏好；再次到达婚讯时按原偏好恢复。通过锚点直达 Day 2 等章节，直接准备对应音乐，不先播放 Rain。音乐开关从婚讯起可用，播放失败时提供重试。
 
-使用 Web Audio 的 GainNode 做约 3 秒淡入淡出，避免依赖 iOS 对 HTMLAudioElement.volume 的支持。Flower Dance、Pelican Town 与结尾音乐保留完整曲目并循环；结尾的目标音量降低。切到后台时挂起音频，返回时尝试恢复；失败时保留重试入口。
+所有短版曲目都自动循环。使用 Web Audio 的 GainNode 做章节间约 3 秒淡入淡出，避免依赖 iOS 对 HTMLAudioElement.volume 的支持。音频文件自身有 0.45 秒淡入和 1.5–3 秒淡出，回环会有自然的音量起落，不硬切，也不宣称是原曲无缝乐句循环。手动暂停后恢复 Rain 的媒体位置或星露谷曲目的缓冲播放位置，不必从头开始。结尾的目标音量降低。切到后台时挂起音频，返回时尝试恢复；失败时保留重试入口。
 
-Rain 从用户指定的 [Bilibili 视频 BV1at411L7Px](https://www.bilibili.com/video/BV1at411L7Px/) 提取，完整时长约 7 分 34 秒。根目录 `rain.mp3` 为较高质量的完整文件；`public/audio/rain.mp3` 为 128 kbps 的完整网页版本，约 6.9 MiB。Day 1 使用流式媒体播放并通过 Web Audio 淡入淡出，不等待整首下载和解码；从婚讯开始的播放会产生音频请求，前两段及有关闭偏好的会话不主动请求音频。
+Rain 从用户指定的 [Bilibili 视频 BV1at411L7Px](https://www.bilibili.com/video/BV1at411L7Px/) 提取，原始时长约 7 分 34 秒。根目录 `rain.mp3` 和旧网页版本均保留，新版另存为 `rain-intro-v2.mp3`。依据用户提供的约 2:48 人声提示，检查附近 100ms 波形能量，选择更早的较低能量窗口，剪至 **2:45.3**，2:42.3 开始淡出。这是保守处理，不是通过人工听辨或语音模型确认的人声起点；最终人声边界仍需用户试听确认。
 
-用户提供的其余原始 MP3 保留在根目录，网页版本以 160 kbps 重新编码并移除封面元数据。转场约 470 KB、Flower Dance 约 588 KB，其余两首约 2–3 MB，按需加载与缓存。没有使用未提供的 Overture。
+全部新短版以 96 kbps、44.1kHz、双声道 MP3 编码并移除封面元数据。Rain 约 1938 KiB，Fall 282 KiB，Flower Dance 351 KiB，Pelican Town 661 KiB，结尾 648 KiB，实际使用合计约 **3.79 MiB**（原约 12.7 MiB）。Fall 保留 24 秒转场，Flower Dance 原本只有约 30 秒；另两首选一分钟前的较低能量窗口收尾。精确剪辑配置和文件大小在 `public/audio/edits.json`。执行 `npm run prepare:audio` 可从根目录原始 MP3 重建短版，原片不覆盖。旧文件仅兼容旧页面，不再被新页面请求。没有使用未提供的 Overture。
 
-如需更换 Day 1 音乐，替换 `public/audio/rain.mp3` 或修改 `audio.tracks.day1.src` 即可。`scripts/import-rain.mjs` 记录提取来源与步骤；它会保护已经存在的根目录 `rain.mp3`，不会覆盖原文件。其他曲目和淡入淡出时长也可在婚礼配置修改。
+加载顺序：HTML/CSS、首张婚纱照和字体优先 → 页面就绪后在空闲时间准备 Rain → 后续音乐按阅读顺序逐首低优先级下载；星露谷图片在同阶段稍后提前加载，不等进场。React 可能在 window.load 之后挂载婚纱照，因此额外等待图片完成或失败（最多额外 4 秒，避免坏图永久阻塞）。Rain 使用同一个 `preload=auto` 流式媒体元素预缓冲和播放，不等待整首下载；其他曲目共享下载 Promise / 解码缓存，播放直接复用，避免预加载与播放各下载一份。预加载失败静默处理，真正播放时可重试；关闭音乐后不再启动后续预下载任务，已开始的下载可以完成。提前下载不绕过浏览器自动播放限制，实际等待时间仍取决于连接速度及浏览器缓冲策略。
+
+如需更换音乐，修改 `audio.tracks` 的新文件路径。`scripts/import-rain.mjs` 记录原始提取来源与步骤；它保护根目录原文件。音频加工后必须更新版本化文件名避免旧缓存，并重新检查循环与淡出。
 
 ## 星露谷素材来源
 
@@ -151,6 +153,8 @@ npm run test:browser
 npx playwright install webkit
 BROWSER_ENGINE=webkit npm run test:browser
 node scripts/verify-audio.mjs
+node scripts/verify-audio-edits.mjs
+node scripts/verify-preloading.mjs
 BROWSER_ENGINE=webkit node scripts/verify-audio.mjs
 node scripts/verify-rain.mjs
 BROWSER_ENGINE=webkit node scripts/verify-rain.mjs

@@ -14,6 +14,7 @@ import { DayTwo } from "./sections/DayTwo";
 import { Ending } from "./sections/Ending";
 import { MemoryWall } from "./sections/MemoryWall";
 import { InvitationSummary } from "./sections/InvitationSummary";
+import { useUpcomingAssets } from "./hooks/useUpcomingAssets";
 
 export default function App() {
   useInitialAnchor();
@@ -24,6 +25,7 @@ export default function App() {
   const showDayNavigation = useReadingNavigation(showNavigation);
   const { status, track, enabled, toggle, enableMusic } = useMusic(scene, showMusic);
   useReveal();
+  useUpcomingAssets();
   const autumn = scene !== "day1";
   return (
     <div

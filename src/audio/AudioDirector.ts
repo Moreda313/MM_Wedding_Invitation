@@ -2,7 +2,7 @@ import { wedding, type MusicScene } from "../data/wedding";
 import { assetUrl } from "../lib/assetUrl";
 
 export type AudioStatus = "off" | "loading" | "playing" | "waiting" | "blocked" | "error";
-type Voice = { source: AudioBufferSourceNode; gain: GainNode };
+type Voice = { source: AudioBufferSourceNode; gain: GainNode; scene: MusicScene; startedAt: number; offset: number };
 type StreamingVoice = {
   audio: HTMLAudioElement;
   source: MediaElementAudioSourceNode;
@@ -15,15 +15,83 @@ type StreamingVoice = {
 export class AudioDirector {
   private context?: AudioContext;
   private buffers = new Map<string, Promise<AudioBuffer>>();
+  private bytes = new Map<string, Promise<ArrayBuffer>>();
+  private downloads = new Set<AbortController>();
+  private offsets = new Map<MusicScene, number>();
   private voices = new Set<Voice>();
+  private dayOneAudio?: HTMLAudioElement;
   private dayOne?: StreamingVoice;
   private generation = 0;
   private enabled = false;
+  private playing = false;
   private disposed = false;
   private activeScene?: MusicScene;
   constructor(
     private report: (status: AudioStatus, scene?: MusicScene) => void,
   ) {}
+
+  // Download only: no AudioContext, resume(), play() or status changes in the
+  // first two greetings. Playback reuses this exact media element / byte cache.
+  async preload(scene: MusicScene) {
+    if (this.disposed) return;
+    if (scene === "day1") {
+      const audio = this.getDayOneAudio();
+      if (audio.readyState >= 3) return;
+      await new Promise<void>(resolve => {
+        const done = () => {
+          clearTimeout(timer);
+          audio.removeEventListener("canplay", done);
+          audio.removeEventListener("error", done);
+          resolve();
+        };
+        const timer = window.setTimeout(done, 2500);
+        audio.addEventListener("canplay", done, { once: true });
+        audio.addEventListener("error", done, { once: true });
+      });
+      return;
+    }
+    const src = wedding.audio.tracks[scene].src;
+    await this.loadBytes(src, "low");
+    if (this.context && !this.disposed) await this.loadBuffer(src);
+  }
+
+  private loadBytes(src: string, priority: RequestPriority = "auto") {
+    if (!this.bytes.has(src)) {
+      const controller = new AbortController();
+      this.downloads.add(controller);
+      const pending = fetch(assetUrl(src), { signal: controller.signal, priority })
+        .then(response => {
+          if (!response.ok) throw new Error("Audio unavailable");
+          return response.arrayBuffer();
+        })
+        .catch(error => { this.bytes.delete(src); throw error; })
+        .finally(() => this.downloads.delete(controller));
+      this.bytes.set(src, pending);
+    }
+    return this.bytes.get(src)!;
+  }
+
+  private loadBuffer(src: string) {
+    if (!this.buffers.has(src)) {
+      const context = this.context!;
+      this.buffers.set(src, this.loadBytes(src)
+        .then(bytes => context.decodeAudioData(bytes.slice(0)))
+        .catch(error => {
+          this.buffers.delete(src);
+          this.bytes.delete(src);
+          throw error;
+        }));
+    }
+    return this.buffers.get(src)!;
+  }
+
+  private rememberPosition() {
+    if (!this.context || !this.playing) return;
+    for (const voice of this.voices) {
+      if (voice.scene === this.activeScene && voice.source.buffer)
+        this.offsets.set(voice.scene, (voice.offset + this.context.currentTime - voice.startedAt) % voice.source.buffer.duration);
+    }
+  }
 
   async enable(scene: MusicScene) {
     if (this.disposed) return;
@@ -75,31 +143,19 @@ export class AudioDirector {
         if (context.state !== "running") await context.resume();
         if (request !== this.generation || !this.enabled || this.disposed)
           return;
+        this.rememberPosition();
         this.fadeOut(wedding.audio.fadeSeconds, true);
         this.ramp(stream.gain, track.volume, wedding.audio.fadeSeconds);
         this.activeScene = scene;
+        this.playing = true;
         this.report("playing", scene);
         return;
       }
-      if (!this.buffers.has(track.src)) {
-        this.buffers.set(
-          track.src,
-          fetch(assetUrl(track.src))
-            .then((response) => {
-              if (!response.ok) throw new Error("Audio unavailable");
-              return response.arrayBuffer();
-            })
-            .then((bytes) => context.decodeAudioData(bytes))
-            .catch((error) => {
-              this.buffers.delete(track.src);
-              throw error;
-            }),
-        );
-      }
-      const buffer = await this.buffers.get(track.src)!;
+      const buffer = await this.loadBuffer(track.src);
       if (request !== this.generation || !this.enabled || this.disposed) return;
       if (context.state !== "running") await context.resume();
       if (request !== this.generation || !this.enabled || this.disposed) return;
+      this.rememberPosition();
       this.fadeOut(wedding.audio.fadeSeconds);
       const source = context.createBufferSource();
       source.buffer = buffer;
@@ -111,15 +167,17 @@ export class AudioDirector {
         context.currentTime + wedding.audio.fadeSeconds,
       );
       source.connect(gain).connect(context.destination);
-      const voice = { source, gain };
+      const offset = this.offsets.get(scene) || 0;
+      const voice = { source, gain, scene, offset, startedAt: context.currentTime };
       this.voices.add(voice);
       source.onended = () => {
         source.disconnect();
         gain.disconnect();
         this.voices.delete(voice);
       };
-      source.start();
+      source.start(0, offset);
       this.activeScene = scene;
+      this.playing = true;
       this.report("playing", scene);
     } catch (error) {
       if (request === this.generation && !this.disposed) {
@@ -133,24 +191,32 @@ export class AudioDirector {
     return error instanceof DOMException && error.name === "NotAllowedError";
   }
 
-  private getDayOne(): StreamingVoice {
-    if (this.dayOne) return this.dayOne;
+  private getDayOneAudio() {
+    if (this.dayOneAudio) return this.dayOneAudio;
     const audio = new Audio();
-    audio.preload = "none";
+    audio.preload = "auto";
     audio.crossOrigin = "anonymous";
     audio.loop = true;
     audio.setAttribute("playsinline", "");
     audio.src = assetUrl(wedding.audio.tracks.day1.src);
+    this.dayOneAudio = audio;
+    audio.addEventListener("error", () => {
+      if (!this.disposed && this.enabled && this.dayOne?.wanted)
+        this.report("error");
+    });
+    audio.load();
+    return audio;
+  }
+
+  private getDayOne(): StreamingVoice {
+    if (this.dayOne) return this.dayOne;
+    const audio = this.getDayOneAudio();
     const context = this.context!;
     const source = context.createMediaElementSource(audio);
     const gain = context.createGain();
     gain.gain.value = 0;
     source.connect(gain).connect(context.destination);
     this.dayOne = { audio, source, gain, wanted: false };
-    audio.addEventListener("error", () => {
-      if (!this.disposed && this.enabled && this.dayOne?.wanted)
-        this.report("error");
-    });
     return this.dayOne;
   }
 
@@ -190,6 +256,8 @@ export class AudioDirector {
   }
 
   disable() {
+    if (this.enabled) this.rememberPosition();
+    this.playing = false;
     this.enabled = false;
     ++this.generation;
     this.fadeOut(0.25);
@@ -229,13 +297,19 @@ export class AudioDirector {
       }
     }
     this.voices.clear();
+    this.downloads.forEach(controller => controller.abort());
+    this.downloads.clear();
+    this.bytes.clear();
+    this.buffers.clear();
     if (this.dayOne) {
       clearTimeout(this.dayOne.pauseTimer);
-      this.dayOne.audio.pause();
-      this.dayOne.audio.removeAttribute("src");
-      this.dayOne.audio.load();
       this.dayOne.source.disconnect();
       this.dayOne.gain.disconnect();
+    }
+    if (this.dayOneAudio) {
+      this.dayOneAudio.pause();
+      this.dayOneAudio.removeAttribute("src");
+      this.dayOneAudio.load();
     }
     void this.context?.close();
   }

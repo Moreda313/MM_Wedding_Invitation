@@ -30,7 +30,7 @@ try {
     if (request.url().endsWith(".mp3")) audioRequests.push(request.url());
   });
   await page.goto(url, { waitUntil: "networkidle" });
-  assert.equal(audioRequests.length, 0, "No audio before consent");
+  assert.equal(audioRequests.length, 0, "Remembered pause suppresses audio preloading");
   await page.evaluate(
     () => (document.documentElement.style.scrollBehavior = "auto"),
   );
@@ -47,11 +47,11 @@ try {
   assert.ok(
     await page.evaluate(
       () =>
-        window.__rain.duration > 452 &&
-        window.__rain.duration < 456 &&
+        window.__rain.duration > 165 &&
+        window.__rain.duration < 166 &&
         window.__rain.loop,
     ),
-    "Full looping track must be available",
+    "Short looping instrumental edit must be available",
   );
   await page.locator(".music-control").click();
   await page.waitForFunction(() => window.__rain.paused);
@@ -92,7 +92,7 @@ try {
     { timeout: 60000 },
   );
   console.log(
-    `${engine}: full Rain stream, consent, pause/resume, crossfade and scrolling back passed`,
+    `${engine}: short Rain stream, consent, pause/resume, crossfade and scrolling back passed`,
   );
   // Also check enabling music in Day 2 first, then returning to Day 1.
   await page.reload({ waitUntil: "networkidle" });

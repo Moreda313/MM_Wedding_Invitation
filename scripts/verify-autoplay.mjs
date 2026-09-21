@@ -28,7 +28,7 @@ async function assertSilentOpening(page, requests) {
   assert.equal(await page.locator(".music-shell").getAttribute("data-visible"), "false");
   assert.equal(await page.locator(".music-shell").evaluate(e => e.inert), true);
   assert.deepEqual(await page.evaluate(() => [window.__playAttempts, window.__resumeAttempts]), [0, 0]);
-  assert.equal(requests.length, 0, "No audio requests or autoplay attempts during the quiet opening");
+  assert.ok(requests.some(url => url.includes("rain-intro-v2.mp3")), "Rain downloads during the silent opening");
 }
 
 const allowed = await chromium.launch({ ...chrome, args: ["--autoplay-policy=no-user-gesture-required"] });
@@ -151,7 +151,7 @@ for (const engine of [chromium, webkit]) {
       return app.dataset.audioTrack === "party" && app.dataset.audioStatus === "playing";
     });
     assert.equal(await direct.locator(".invitation").getAttribute("data-audio-track"), "party");
-    assert.ok(!directRequests.some(u => u.includes("rain.mp3")), "Direct links must not briefly start Rain");
+    assert.ok(!directRequests.some(u => u.includes("rain-intro-v2.mp3")), "Direct links must not briefly start Rain");
     await direct.close();
 
     const reduced = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });

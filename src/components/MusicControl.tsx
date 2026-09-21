@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AudioDirector, type AudioStatus } from "../audio/AudioDirector";
 import { wedding, type MusicScene } from "../data/wedding";
+import { afterPageReady } from "../lib/afterPageReady";
 
 function initialPreference() {
   try { return sessionStorage.getItem("mm-music-muted") !== "1"; }
@@ -43,6 +44,24 @@ export function useMusic(scene: MusicScene, allowed: boolean) {
       document.removeEventListener("visibilitychange", visibility);
     };
   }, []);
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    const stop = afterPageReady(() => {
+      const order: MusicScene[] = ["day1", "transition", "day2", "party", "ending"];
+      const instance = director.current;
+      void (async () => {
+        for (const next of order) {
+          if (cancelled || !instance) return;
+          // Direct chapter entry / fast scrolling prioritize where we are now.
+          if (order.indexOf(next) < order.indexOf(sceneRef.current)) continue;
+          try { await instance.preload(next); }
+          catch { /* Speculation must not show errors; playback can retry. */ }
+        }
+      })();
+    });
+    return () => { cancelled = true; stop(); };
+  }, [enabled]);
   useEffect(() => {
     // The first two greetings are silent, even after touch/keyboard gestures.
     // Returning to the opening pauses playback without changing the mute preference.

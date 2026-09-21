@@ -31,7 +31,8 @@ for (const engine of [chromium, webkit]) {
       page.on("response", r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
       page.on("request", r => { if (r.url().includes("/photos/wall/")) wallRequests.push(r.url()); });
       await page.goto(url, { waitUntil: "networkidle" });
-      assert.equal(wallRequests.length, 0, "Wall photos should load near the ending, not the opening");
+      await page.waitForFunction(() => [...document.querySelectorAll("#memory-wall img")].every(i => i.complete && i.naturalWidth > 0));
+      assert.equal(wallRequests.length, 11, "After the initial page loads, upcoming photos warm in the background");
       assert.equal(await page.locator(".photo-story, .photo-space").count(), 0);
       assert.deepEqual(await page.locator(".snapshot").evaluateAll(items => items.map(e => e.dataset.photo)), ids);
       assert.ok(await page.locator("#memory-wall").evaluate(e => e.previousElementSibling.classList.contains("day-two") && e.nextElementSibling.id === "ending"));
@@ -60,7 +61,7 @@ for (const engine of [chromium, webkit]) {
       await page.goto(`${url}#memory-wall`, { waitUntil: "networkidle" });
       await page.waitForFunction(() => document.querySelector(".invitation").dataset.scene === "party");
       assert.deepEqual(errors, []);
-      console.log(`${engine.name()} ${width}: approved wall, eleven lazy photos, last-page summary and current venue passed`);
+      console.log(`${engine.name()} ${width}: approved wall, eleven prefetched photos, last-page summary and current venue passed`);
       await page.close();
     }
   } finally { await browser.close(); }
