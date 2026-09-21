@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { TownInteraction } from "../components/TownInteraction";
 import { wedding } from "../data/wedding";
 import { DayInfo } from "../components/DayInfo";
 import { PixelIcon } from "../components/PixelIcon";
@@ -51,32 +51,6 @@ export function DayTwo() {
 }
 
 function PartyPreview() {
-  const [selected, setSelected] = useState<Set<string>>(() => {
-    try {
-      const stored: unknown = JSON.parse(
-        sessionStorage.getItem("mm-wishes") || "[]",
-      );
-      return new Set(
-        Array.isArray(stored)
-          ? stored.filter((item): item is string => typeof item === "string")
-          : [],
-      );
-    } catch {
-      return new Set();
-    }
-  });
-  const toggle = (id: string) =>
-    setSelected((previous) => {
-      const next = new Set(previous);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      try {
-        sessionStorage.setItem("mm-wishes", JSON.stringify([...next]));
-      } catch {
-        /* private browsing */
-      }
-      return next;
-    });
   return (
     <section
       id="party"
@@ -94,11 +68,6 @@ function PartyPreview() {
           <span className="map-bridge" />
           <span className="map-fence fence-top" /><span className="map-fence fence-bottom" />
           {Array.from({ length: 7 }, (_, i) => <i key={i} className={`map-grass grass-${i + 1}`} />)}
-          <span className="map-tree tree-one"><PixelIcon name="Oak_Fall" /></span>
-          <span className="map-tree tree-two"><PixelIcon name="Maple_Fall" /></span>
-          <span className="map-tree tree-three"><PixelIcon name="Oak_Fall" /></span>
-          <span className="map-tree tree-four"><PixelIcon name="Maple_Fall" /></span>
-          <span className="map-tree tree-five"><PixelIcon name="Oak_Fall" /></span>
           <span className="map-harvest harvest-pumpkin"><PixelIcon name="Pumpkin" /></span>
           <span className="map-harvest harvest-berries"><PixelIcon name="Cranberries" /></span>
           <span className="map-harvest harvest-nut"><PixelIcon name="Hazelnut" /></span>
@@ -112,24 +81,25 @@ function PartyPreview() {
           <span className="map-friends friend-junimo"><PixelIcon name="Junimo_Icon" /></span>
           {Array.from({ length: 9 }, (_, i) => <i key={i} className={`map-leaf leaf-${i + 1}`} />)}
         </div>
+        {(["one", "two", "three", "four", "five"] as const).map((position, index) => (
+          <TownInteraction key={position} tree className={`map-tree tree-${position}`}
+            aria-label={`轻摇秋日${index % 2 ? "枫树" : "橡树"}`}>
+            <PixelIcon name={index % 2 ? "Maple_Fall" : "Oak_Fall"} />
+          </TownInteraction>
+        ))}
         {wedding.party.activities.map((activity) => (
-          <button
+          <TownInteraction
             key={activity.id}
             data-activity={activity.id}
-            className={`map-stop ${selected.has(activity.id) ? "selected" : ""}`}
+            className="map-stop"
             style={{ left: `${activity.x}%`, top: `${activity.y}%` }}
-            onClick={() => toggle(activity.id)}
-            aria-pressed={selected.has(activity.id)}
-            aria-label={`${activity.name}，${selected.has(activity.id) ? wedding.party.selected : wedding.party.unselected}`}
+            aria-label={activity.name}
           >
             <span className="map-icon">
               <PixelIcon name={activity.icon} />
-              <span className="check" aria-hidden="true">
-                ✓
-              </span>
             </span>
             <span className="stop-label">{activity.name}</span>
-          </button>
+          </TownInteraction>
         ))}
       </div>
       <div className="seed-note" data-reveal>

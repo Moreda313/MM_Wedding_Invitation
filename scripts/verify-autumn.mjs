@@ -60,9 +60,9 @@ for (const engine of [chromium, webkit]) {
       await page.locator(".town-map").evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));
       // WebKit may abort decode() while activating lazy images after a jump.
       // Wait for the final visible source, and still fail on broken images.
-      await page.waitForFunction(() => [...document.querySelectorAll(".map-autumn img")]
+      await page.waitForFunction(() => [...document.querySelectorAll(".map-autumn img, .map-tree img")]
         .every(image => image.complete && image.naturalWidth > 0));
-      assert.equal(await page.locator(".map-autumn img").count(), 19);
+      assert.equal(await page.locator(".map-autumn img, .map-tree img").count(), 19);
       assert.match(await page.locator('[data-activity="music"] img').getAttribute("src"), /Flute_Block\.png$/);
       await page.waitForTimeout(900);
       for (const stop of await page.locator(".map-stop").all()) {
@@ -74,7 +74,7 @@ for (const engine of [chromium, webkit]) {
           return e.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
         }), "Decorations must never intercept a tap");
         await stop.click();
-        assert.equal(await stop.getAttribute("aria-pressed"), "true");
+        assert.equal(await stop.getAttribute("aria-pressed"), null);
       }
       await page.locator(".town-map").evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));
       await page.screenshot({ path: `test-results/${engine.name()}-${width}-autumn-map.png` });

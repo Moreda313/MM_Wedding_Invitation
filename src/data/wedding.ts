@@ -118,8 +118,6 @@ export const wedding = {
   party: {
     eyebrow: "小镇活动一览",
     title: "在一起，\n享受秋日时光。",
-    selected: "已标记",
-    unselected: "标记想玩",
     activities: [
       { id: "coffee", name: "喝杯咖啡", icon: "Coffee", x: 20, y: 22 },
       { id: "drink", name: "喝一杯", icon: "Beer", x: 75, y: 18 },

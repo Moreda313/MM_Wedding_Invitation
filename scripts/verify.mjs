@@ -168,9 +168,9 @@ try {
     await page.locator("#party").scrollIntoViewIfNeeded();
     const coffee = page.locator(".map-stop").first();
     await coffee.click();
-    assert.equal(await coffee.getAttribute("aria-pressed"), "true");
+    assert.equal(await coffee.getAttribute("aria-pressed"), null);
     await page.reload({ waitUntil: "networkidle" });
-    assert.equal(await coffee.getAttribute("aria-pressed"), "true");
+    assert.equal(await coffee.getAttribute("aria-pressed"), null);
     await page.evaluate(
       () => (document.documentElement.style.scrollBehavior = "auto"),
     );

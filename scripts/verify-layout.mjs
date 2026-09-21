@@ -70,7 +70,7 @@ for (const engine of [chromium, webkit]) {
       for (const stop of await page.locator(".map-stop").all()) {
         await stop.evaluate(e => e.scrollIntoView({ behavior: "instant", block: "center" }));
         await stop.click();
-        assert.equal(await stop.getAttribute("aria-pressed"), "true");
+        assert.equal(await stop.getAttribute("aria-pressed"), null);
       }
       if (width === 390) {
         for (const id of ["day1-info", "day2-info", "party", "memory-wall", "ending", "info-summary"]) {

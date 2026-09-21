@@ -1031,17 +1031,29 @@ p {
 }
 .map-tree {
   position: absolute;
+  z-index: 1;
   width: 66px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  touch-action: manipulation;
   filter: drop-shadow(3px 4px 0 #5d603218);
 }
-.map-tree .pixel-icon { width: 100%; height: auto; }
+.map-tree .pixel-icon { display: block; width: 100%; height: auto; transform-origin: 50% 92%; }
+.map-tree:focus-visible { outline-offset: -2px; }
+.tree-leaves { position: absolute; inset: 0; pointer-events: none; }
+.falling-leaf { opacity: 0; left: 25%; top: 22%; }
+.falling-leaf:nth-child(2) { left: 65%; top: 30%; background: var(--marigold); }
+.falling-leaf:nth-child(3) { left: 42%; top: 16%; background: var(--autumn-olive); }
+.falling-leaf:nth-child(4) { left: 55%; top: 38%; }
 .tree-one {
-  left: -4px;
+  left: 0;
   top: 1%;
   width: 58px;
 }
 .tree-two {
-  right: -12px;
+  right: 0;
   top: 26%;
   width: 58px;
 }
@@ -1050,8 +1062,8 @@ p {
   bottom: -5px;
   width: 50px;
 }
-.tree-four { left: -5px; top: 27%; width: 38px; }
-.tree-five { right: -7px; top: -9px; width: 50px; }
+.tree-four { left: 0; top: 27%; width: 44px; }
+.tree-five { right: 0; top: 0; width: 50px; }
 .map-bridge {
   position: absolute;
   left: 39%; top: 40%; width: 21%; height: 15%;
@@ -1135,6 +1147,7 @@ p {
   gap: 5px;
   min-width: 83px;
   min-height: 70px;
+  touch-action: manipulation;
 }
 .map-stop[data-activity="coffee"] {
   --stall: var(--wood);
@@ -1163,7 +1176,7 @@ p {
   width: 45px;
   height: 45px;
   filter: drop-shadow(2px 4px 0 #69523530);
-  transition: transform 0.2s;
+  transform-origin: 50% 90%;
 }
 .map-icon > .pixel-icon {
   height: 42px;
@@ -1178,30 +1191,6 @@ p {
   white-space: nowrap;
   color: var(--autumn-ink);
   box-shadow: 2px 2px 0 var(--stall);
-}
-.map-stop:hover .map-icon {
-  transform: translateY(-3px);
-}
-.check {
-  display: none;
-  position: absolute;
-  right: -3px;
-  top: -4px;
-  width: 17px;
-  height: 17px;
-  line-height: 17px;
-  background: var(--ivory);
-  outline: 2px solid var(--stall);
-  color: var(--moss);
-  font-size: 12px;
-}
-.selected .check {
-  display: block;
-}
-.selected .stop-label {
-  background: var(--ivory);
-  outline: 1px solid var(--stall);
-  outline-offset: 2px;
 }
 .seed-note {
   display: flex;
