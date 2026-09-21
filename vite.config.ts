@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "VITE_");
-  const site = new URL(env.VITE_SITE_URL || "https://moreda313.github.io/MM_Wedding_Invitation/");
+  const site = new URL(env.VITE_SITE_URL || "https://wedding.moreda.me/");
   if (site.protocol !== "https:" || site.username || site.password || site.search || site.hash) {
     throw new Error("VITE_SITE_URL must be a public HTTPS site URL without credentials, query or fragment");
   }

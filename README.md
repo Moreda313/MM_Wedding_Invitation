@@ -176,9 +176,23 @@ Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `
 
 ## 分享封面与元信息
 
-`cover.png` 仅为本地原图，不修改、不提交。执行 `node scripts/prepare-share-cover.mjs`，生成完整构图的 1200×630 JPEG `public/assets/share/cover-7e23e22c.jpg`（约 222KB，无 EXIF）。图片只在 `index.html` 分享元信息中引用，不插入正文，也不通过隐藏图片、预加载等方式占用正常浏览的带宽。
+`cover.png` 仅为本地原图，不修改、不提交。v2 使用 imagegen 内置工具精简封面文字，输出另存为 `cover-share-v2.png`，仅保留 M & M / Wedding Invitation / 2026.10.22 — 2026.10.23。提示词见 [docs/share-cover-prompt.md](docs/share-cover-prompt.md)。执行 `node scripts/prepare-share-cover.mjs`，生成 1200×630 JPEG `public/assets/share/wedding-cover-976137ba.jpg`（约 215 KiB，无 EXIF）及同内容的 `wedding-cover.jpg`。分享元信息使用带内容哈希的地址，换图时必须同时更新文件名和 HTML；旧图保留以兼容旧分享。图片不插入正文，也不通过隐藏图片、预加载等方式占用正常浏览的带宽。
 
-HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网站名称及规范地址，以及 Twitter 大图卡片元信息。构建时写入绝对 HTTPS 地址，爬虫无需执行 JavaScript。默认正式地址是当前 GitHub Pages；迁移域名时务必设置 `VITE_SITE_URL=https://你的域名/ npm run build`（若放在子目录，同时设置 `--base=/子目录/`，并把 `VITE_SITE_URL` 设为对应完整目录地址）。这不是密钥，不含公众号凭据。
+HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网站名称及规范地址，以及 Twitter 大图卡片元信息。构建时写入绝对 HTTPS 地址，爬虫无需执行 JavaScript。默认正式地址为 `https://wedding.moreda.me/`，普通 `npm run build` 即可生成该独立域名的根路径版本；GitHub Actions 单独指定 `VITE_SITE_URL=https://moreda313.github.io/MM_Wedding_Invitation/` 与仓库 base，避免两个部署混用地址。以后迁移域名时设置 `VITE_SITE_URL=https://你的域名/ npm run build`（若放在子目录，同时设置 `--base=/子目录/`）。这不是密钥，不含公众号凭据。
+
+分享标题为“毛凌涛 & 陈婉梦 · 婚礼请柬”，OG / Twitter 描述为“2026.10.22 — 10.23 · Garden Wedding → Stardew Autumn Party”；普通网页描述保持中文。
+
+正式服务器部署必须上传整个 `dist/`（包括新版封面和 HTML）。目前 GitHub 工作流只发布 Pages，不会自动同步香港服务器。确认 SSH 主机与目录后，可先运行 `rsync -avzn dist/ 主机别名:/var/www/mm-wedding/` 预览，再运行 `rsync -avz dist/ 主机别名:/var/www/mm-wedding/`；不要未经核对就使用 `--delete` 清除网站目录中的其他文件。
+
+部署后验证：
+
+```sh
+curl -fsS https://wedding.moreda.me/ | rg 'og:|twitter:|description|<title>|canonical'
+curl -I https://wedding.moreda.me/assets/share/wedding-cover-976137ba.jpg
+PREVIEW_URL=https://wedding.moreda.me/ node scripts/verify-share.mjs
+```
+
+图片应返回 200 和 `Content-Type: image/jpeg`，HTML 的分享图片、规范链接必须指向正式域名。微信实测使用内置浏览器打开网页，再点右上角“…”分享给朋友或朋友圈；直接粘贴 URL 不等同于这个流程。版本化文件名避免沿用旧图片地址，但不保证所有平台立刻刷新整张卡片的缓存。
 
 OG 元信息不等于已完成微信自定义分享接口接入，不能保证微信各版本、直接粘贴链接和转发场景都显示指定卡片。若需要稳定控制“分享给朋友/朋友圈”标题、图片与描述，需另行提供具备接口权限的微信账号、配置 JS 接口安全域名，并通过服务端生成签名后接入 `updateAppMessageShareData` / `updateTimelineShareData`。AppSecret、access_token、jsapi_ticket 不应放入静态站或公开仓库。当前版本未声称完成这部分接入，需在正式域名上真机验证。参见[微信 JS-SDK 官方文档](https://developers.weixin.qq.com/doc/service/guide/h5/jssdk.html)。
 
@@ -191,7 +205,7 @@ OG 元信息不等于已完成微信自定义分享接口接入，不能保证�
 本地复现 GitHub Pages 的子路径：
 
 ```sh
-npm run build -- --base=/MM_Wedding_Invitation/
+VITE_SITE_URL=https://moreda313.github.io/MM_Wedding_Invitation/ npm run build -- --base=/MM_Wedding_Invitation/
 npm run preview -- --base=/MM_Wedding_Invitation/
 ```
 

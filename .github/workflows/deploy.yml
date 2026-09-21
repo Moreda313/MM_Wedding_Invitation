@@ -27,6 +27,8 @@ jobs:
         # Web-ready assets are committed; the media preparation binaries are not needed in CI.
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Build for the repository path
+        env:
+          VITE_SITE_URL: https://moreda313.github.io/MM_Wedding_Invitation/
         run: npm run build -- --base=/MM_Wedding_Invitation/
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
