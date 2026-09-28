@@ -66,7 +66,7 @@ scripts/
 
 转场高度从 260svh 收紧为 200svh，开场仍是 260svh。普通信息区使用较短的章节间距，日期与年份/星期在手机端同排，场地图说明至少 12px，活动标签 11–12px。信息汇总仍保留完整时间地点，场地图保持原比例。
 
-夕阳结尾之后增加独立“婚礼信息”汇总页（`#info-summary`），共用 `day1` / `day2` 配置生成日期、星期、城市、酒店、完整地址及日程，不维护第二套数据。每一天提供地图和复制地址按钮；底部导航增加“信息汇总”，结尾也有入口。该页保持结尾音乐，不自动开启音频；信息不依赖滚动显现动画，适合反复查看、截图保存。两天的日程钟点已补齐，不再展示时间待补充提示。
+夕阳结尾之后增加“封面＋婚礼信息”汇总页（`#info-summary`）。顶部复用 1200×630、约 215 KiB 的精简版分享封面，完整横图、不裁剪、不额外增加整屏或结束语，下接中文信息。共用 `day1` / `day2` 配置生成日期、星期、城市、酒店、完整地址及日程，不维护第二套数据。每一天提供地图和复制地址按钮；底部导航增加“信息汇总”，结尾也有入口。该页保持结尾音乐，不自动开启音频；信息不依赖滚动显现动画，适合反复查看、截图保存。封面区域预留宽高比，进入 Day 2 附近才低优先级加载，直接跳到汇总页也会触发加载，不与开场照片、Rain 抢带宽。两天的日程钟点已补齐，不再展示时间待补充提示。
 
 ## 配色与视觉边界
 
@@ -163,6 +163,7 @@ BROWSER_ENGINE=webkit node scripts/verify-rain.mjs
 node scripts/verify-revisions.mjs
 BROWSER_ENGINE=webkit node scripts/verify-revisions.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-summary.mjs
+PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-summary-cover.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autoplay.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-polish.mjs
 PREVIEW_URL=http://127.0.0.1:5173/ node scripts/verify-autumn.mjs
@@ -183,7 +184,7 @@ Chromium 默认使用 macOS 已安装的 Google Chrome；其他机器可修改 `
 
 ## 分享封面与元信息
 
-`cover.png` 仅为本地原图，不修改、不提交。v2 使用 imagegen 内置工具精简封面文字，输出另存为 `cover-share-v2.png`，仅保留 M & M / Wedding Invitation / 2026.10.22 — 2026.10.23。提示词见 [docs/share-cover-prompt.md](docs/share-cover-prompt.md)。执行 `node scripts/prepare-share-cover.mjs`，生成 1200×630 JPEG `public/assets/share/wedding-cover-976137ba.jpg`（约 215 KiB，无 EXIF）及同内容的 `wedding-cover.jpg`。分享元信息使用带内容哈希的地址，换图时必须同时更新文件名和 HTML；旧图保留以兼容旧分享。图片不插入正文，也不通过隐藏图片、预加载等方式占用正常浏览的带宽。
+`cover.png` 仅为本地原图，不修改、不提交。v2 使用 imagegen 内置工具精简封面文字，输出另存为 `cover-share-v2.png`，仅保留 M & M / Wedding Invitation / 2026.10.22 — 2026.10.23。提示词见 [docs/share-cover-prompt.md](docs/share-cover-prompt.md)。执行 `node scripts/prepare-share-cover.mjs`，生成 1200×630 JPEG `public/assets/share/wedding-cover-976137ba.jpg`（约 215 KiB，无 EXIF）及同内容的 `wedding-cover.jpg`。分享元信息使用带内容哈希的地址，换图时必须同时更新文件名和 HTML；旧图保留以兼容旧分享。2026-09-28 起，这张图也显示在最终婚礼信息顶部；开场不挂载图片、不发起请求，浏览至 Day 2 或接近汇总页后才准备。正文显示封面不等于微信聊天能生成自定义卡片，JS-SDK 仍未接入。
 
 HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网站名称及规范地址，以及 Twitter 大图卡片元信息。构建时写入绝对 HTTPS 地址，爬虫无需执行 JavaScript。默认正式地址为 `https://wedding.moreda.me/`，普通 `npm run build` 即可生成该独立域名的根路径版本；GitHub Actions 单独指定 `VITE_SITE_URL=https://moreda313.github.io/MM_Wedding_Invitation/` 与仓库 base，避免两个部署混用地址。以后迁移域名时设置 `VITE_SITE_URL=https://你的域名/ npm run build`（若放在子目录，同时设置 `--base=/子目录/`）。这不是密钥，不含公众号凭据。
 
@@ -193,12 +194,12 @@ HTML 包含 Open Graph 的标题、描述、图片、图片尺寸、语言、网
 
 ```sh
 npm run build
-rsync -avzn --delete dist/ root@47.83.183.251:/var/www/mm-wedding/
+rsync -avzn --delete --exclude=/9aacac370411cf5e18c1fa526d48566a.txt dist/ root@47.83.183.251:/var/www/mm-wedding/
 # 确认目标目录与待删除文件后，再实际同步：
-rsync -avz --delay-updates --delete-delay dist/ root@47.83.183.251:/var/www/mm-wedding/
+rsync -avz --delay-updates --delete-delay --exclude=/9aacac370411cf5e18c1fa526d48566a.txt dist/ root@47.83.183.251:/var/www/mm-wedding/
 ```
 
-不得上传 GitHub 子路径构建到服务器；不得清理此目录以外的内容。如果预览发现服务器配置或不相关文件会被删除，应先停止核对。
+不得上传 GitHub 子路径构建到服务器；不得清理此目录以外的内容。2026-09-28 核对发现服务器已有独立验证文件 `9aacac370411cf5e18c1fa526d48566a.txt`，不属于本地构建，以上命令明确排除并保留它，不读取或提交其内容。如果预览发现其他服务器配置或不相关文件会被删除，应先停止核对。
 
 部署后验证：
 

@@ -55,7 +55,7 @@ try {
   await page.close();
 
   const app = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  // This test checks share-only artwork, not completion of background music
+  // This test checks cover placement, not completion of background music
   // downloads. Playback/preloading has its own live regression suite.
   await mutedSession(app);
   const covers = [];
@@ -64,7 +64,12 @@ try {
   await app.locator(".invitation").waitFor();
   await app.waitForTimeout(1000);
   assert.equal(await app.locator('body img[src*="/assets/share/"]').count(), 0);
-  assert.equal(covers.length, 0, "Share-only artwork must not cost bandwidth in the invitation");
+  assert.equal(covers.length, 0, "The closing cover must not compete with the opening");
   assert.equal(await app.locator(".invitation").getAttribute("data-audio-status"), "off");
-  console.log("Share metadata passed without JavaScript; full-composition JPEG loads correctly, has no EXIF and never appears or loads in the invitation");
+  await app.locator("#day2").evaluate(e => e.scrollIntoView({ behavior: "instant" }));
+  await app.waitForFunction(() => document.querySelector(".summary-cover img")?.naturalWidth === 1200);
+  assert.equal(await app.locator('body img[src*="/assets/share/"]').count(), 1);
+  assert.equal(covers.length, 1, "Reuse the existing share image once in the final summary");
+  assert.ok(await app.locator(".summary-cover").evaluate(e => e.nextElementSibling.classList.contains("summary-heading")));
+  console.log("Share metadata and JPEG verified; cover stays out of the opening and prepares during Day 2 for the final summary");
 } finally { await browser.close(); }

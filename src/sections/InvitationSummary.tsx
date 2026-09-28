@@ -1,11 +1,35 @@
+import { useEffect, useRef, useState } from "react";
 import { wedding } from "../data/wedding";
 import { VenueActions } from "../components/VenueActions";
+import { assetUrl } from "../lib/assetUrl";
 
 export function InvitationSummary() {
+  const coverRef = useRef<HTMLElement>(null);
+  const [prepareCover, setPrepareCover] = useState(false);
+  useEffect(() => {
+    // Prepare during Day 2, not alongside the opening portrait and Rain.
+    // Also observe the cover itself for direct summary links / navigation jumps.
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      setPrepareCover(true);
+      observer.disconnect();
+    }, { rootMargin: "600px 0px" });
+    const dayTwo = document.getElementById("day2");
+    if (dayTwo) observer.observe(dayTwo);
+    if (coverRef.current) observer.observe(coverRef.current);
+    return () => observer.disconnect();
+  }, []);
   return (
     <footer className="invitation-summary" id="info-summary" tabIndex={-1}
       data-music="ending" aria-labelledby="summary-title">
       <div className="summary-inner">
+        <figure className="summary-cover" ref={coverRef}>
+          {prepareCover && <img
+            src={assetUrl("/assets/share/wedding-cover-976137ba.jpg")}
+            width="1200" height="630" decoding="async" fetchPriority="low"
+            alt="M & M 婚礼请柬封面：从白绿花园婚礼到星露谷秋日，2026年10月22日至23日"
+          />}
+        </figure>
         <header className="summary-heading">
           <h2 id="summary-title">{wedding.summary.title}</h2>
           <p>{wedding.couple.groom}<span aria-hidden="true"> & </span>{wedding.couple.bride}</p>

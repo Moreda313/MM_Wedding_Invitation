@@ -1376,6 +1376,18 @@ p {
   max-width: 860px;
   margin: auto;
 }
+.summary-cover {
+  // Reserve the full landscape composition before the deferred image mounts.
+  aspect-ratio: 1200 / 630;
+  margin: 0 0 28px;
+  background: #efece3;
+}
+.summary-cover img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1200 / 630;
+  object-fit: contain;
+}
 .summary-heading {
   text-align: center;
   margin-bottom: 20px;
