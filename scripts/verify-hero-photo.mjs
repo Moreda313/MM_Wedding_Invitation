@@ -1,6 +1,7 @@
 import { chromium, webkit } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
+import sharp from "sharp";
 import { mutedSession } from "./muted-session.mjs";
 
 const url = process.env.PREVIEW_URL || "http://127.0.0.1:4176/";
@@ -66,11 +67,36 @@ for (const engine of [chromium, webkit]) {
           assertFullPhoto(await geometry(photo));
         }
       }
+      if (width < 700) {
+        await page.locator("#day1").evaluate(e => scrollTo({
+          top: e.getBoundingClientRect().bottom + scrollY - innerHeight / 2,
+          behavior: "instant",
+        }));
+        await page.waitForTimeout(150);
+        const samples = await photo.evaluate(e => {
+          const image = e.getBoundingClientRect(), hero = e.parentElement.getBoundingClientRect();
+          return {
+            x: Math.round(hero.left + 8),
+            ys: [Math.ceil(image.bottom + 8), Math.floor(hero.bottom - 3), Math.ceil(hero.bottom + 8)],
+            background: getComputedStyle(e.closest(".day-one")).backgroundColor.match(/\d+/g).map(Number),
+          };
+        });
+        const screenshot = await page.screenshot({ scale: "css", path: `test-results/hero-photo/${engine.name()}-${width}-seam.png` });
+        const { data, info } = await sharp(screenshot).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+        for (const y of samples.ys) {
+          const offset = (y * info.width + samples.x) * info.channels;
+          const pixel = [...data.subarray(offset, offset + 3)];
+          // WebKit can round alpha-composited channels by one 8-bit level.
+          assert.ok(pixel.every((value, channel) => Math.abs(value - samples.background[channel]) <= 1),
+            `Letterboxing/section color mismatch: ${pixel} vs ${samples.background}`);
+        }
+        assert.deepEqual(await geometry(photo), unloaded, "Color fix must not change photo framing or stage dimensions");
+      }
       await page.reload({ waitUntil: "domcontentloaded" });
       await page.waitForFunction(() => document.querySelector(".couple-photo")?.naturalWidth > 0);
       assertFullPhoto(await geometry(photo));
       assert.deepEqual(errors, []);
-      console.log(`${engine.name()} ${width}: delayed load, reserved frame, full composition, scroll, reload passed`);
+      console.log(`${engine.name()} ${width}: delayed load, reserved frame, full composition, scroll, reload and mobile background seam passed`);
       await page.close();
     }
   } finally { await browser.close(); }
